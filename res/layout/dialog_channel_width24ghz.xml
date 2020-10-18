@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@color/wlanscanner_dialog_bg"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_dialog_channelwidth_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="Channel Width (2.4 GHz)"
+        android:textColor="@color/wlanscanner_dialog_header"
+        android:textSize="20sp"
+        android:textStyle="bold" >
+    </TextView>
+
+    <RadioGroup
+        android:id="@+id/rg_dialog_channelwidth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/rb_dialog_channelwidth_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:layout_margin="5dp"
+            android:checked="true"
+            android:textSize="18sp"
+            android:text="20 MHz (g/n)" />
+        
+     	<RadioButton
+            android:id="@+id/rb_dialog_channelwidth_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:layout_margin="5dp"
+            android:checked="true"
+            android:textSize="18sp"
+            android:text="22 MHz (b)" />
+        
+        <RadioButton
+            android:id="@+id/rb_dialog_channelwidth_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="12dp"
+            android:checked="true"
+            android:textSize="18sp"
+            android:text="40 MHz (n)" />
+
+    </RadioGroup>
+    
+  	<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/wlanscanner_dialog_bg"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_dialog_ok"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="8dp"
+            android:background="@drawable/buttonselector"
+            android:clickable="true"
+            android:text="Ok"
+            android:textColor="@color/wlanscanner_button_text"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

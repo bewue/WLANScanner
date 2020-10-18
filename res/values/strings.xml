@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WLANScanner</string>
+    
+    <string name="dev_email">bitbatzen@gmail.com</string>
+    
+    <string name="dialog_wlanlistiteminfo_header_capabilities"><u>Capabilities</u></string>
+    <string name="dialog_wlanlistiteminfo_header_frequency"><u>Frequency</u></string>
+    
+    <string name="sharedPrefs_autoRefreshEnabled">sharedPrefs_autoRefreshEnabled</string>
+    <string name="sharedPrefs_sortingOption">sharedPrefs_sortingOption</string>
+    <string name="sharedPrefs_wlanEnabledByApp">sharedPrefs_wlanEnabledByApp</string>
+    <string name="sharedPrefs_bandwithOption24GHz">sharedPrefs_bandwithOption24GHz</string>
+    <string name="sharedPrefs_bandwithOption5GHz">sharedPrefs_bandwithOption5Ghz</string>
+    <string name="sharedPrefs_selectedTab">sharedPrefs_selectedTab</string>
+
+</resources>

@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+   	<item android:id="@+id/actionbutton_startscan"
+  	    android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="always" />
+
+    <item android:id="@+id/actionbutton_autorefresh"
+        android:icon="@drawable/ic_autorefresh_on"
+        android:showAsAction="always" />
+    
+    <item android:id="@+id/actionbutton_about"
+   		android:title="About"     	
+        android:showAsAction="never" />
+    	
+    <item android:id="@+id/actionbutton_channel_width"
+   		android:title="Channel Width"     	
+        android:showAsAction="never" />
+    
+</menu>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:background="@color/wlanscanner_dialog_bg"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_dialog_about_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:textColor="@color/wlanscanner_dialog_header"
+        android:textSize="20sp"
+        android:textStyle="bold" 
+        android:text="@string/app_name" />
+    
+  	<TextView
+        android:id="@+id/tv_dialog_about_version_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Version" />
+
+    <TextView
+        android:id="@+id/tv_dialog_about_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:text="" />
+    
+  	<TextView
+        android:id="@+id/tv_dialog_about_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold"
+        android:text="Feedback" />
+  	
+ 	<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/dev_email" />
+    
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/wlanscanner_dialog_bg"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_dialog_close"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="8dp"
+            android:background="@drawable/buttonselector"
+            android:clickable="true"
+            android:text="Close"
+            android:textColor="@color/wlanscanner_button_text"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
