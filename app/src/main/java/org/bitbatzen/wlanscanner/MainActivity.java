@@ -42,6 +42,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -55,6 +56,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+
 
 
 public class MainActivity extends Activity implements IEventListener { 
@@ -98,7 +103,8 @@ public class MainActivity extends Activity implements IEventListener {
     private SharedPreferences sharedPrefs;
     
 	
-    @Override
+    @TargetApi(Build.VERSION_CODES.M)
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -160,12 +166,12 @@ public class MainActivity extends Activity implements IEventListener {
             public void onReceive(Context c, Intent intent) {
             	onReceivedScanResults();
             }
-        };     
-        
+        };
+
         registerReceiver(brScanResults, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         
         startScan();
-    }
+	}
     
     @Override
     protected void onPause() {

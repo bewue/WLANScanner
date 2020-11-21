@@ -186,10 +186,10 @@ public abstract class LevelDiagram extends View {
 			canvas.drawText(Integer.toString(-90 + i * 10), 0, posY + yLabelsBounds.height() / 2, yLabelsPaint);
 			canvas.drawLine(innerRect.left, posY, innerRect.right, posY, linesPaint);
 		}
-		
+
 		// clipping
 		canvas.clipRect(innerRect);
-		
+
 		// wlan levels
 		for (WLANDiagramItem wdi : wlans) {
 			// y-axis = -100 to -30
