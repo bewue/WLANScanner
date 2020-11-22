@@ -1,0 +1,5 @@
+WLANScanner ist eine App für die Analyse der WLANs in der Umgebung.
+
+Die App hat eine Listenansicht und Diagrammansichten für das 2.4 GHz- und das 5 GHz-Band. Open Source. Keine Werbung.
+
+https://github.com/bewue/WLANScanner

@@ -1,0 +1,6 @@
+WiFiScanner is an App for analysing the WiFi networks in range.
+
+The App features a list view and diagram views for the 2.4 GHz and 5 GHz band.
+Open source. No Ads.
+
+https://github.com/bewue/WLANScanner
