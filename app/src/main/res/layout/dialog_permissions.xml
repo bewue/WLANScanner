@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/wlanscanner_dialog_bg"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tv_dialog_permission_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="The app requires all requested permissions to work properly!"
+        android:textColor="@color/wlanscanner_dialog_header"
+        android:textSize="20sp"
+        android:textStyle="bold"></TextView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/wlanscanner_dialog_bg"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_dialog_ok"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/buttonselector"
+            android:clickable="true"
+            android:text="Ok"
+            android:textColor="@color/wlanscanner_button_text"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

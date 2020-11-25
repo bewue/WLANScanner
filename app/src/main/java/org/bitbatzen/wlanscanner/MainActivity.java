@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
+import org.bitbatzen.wlanscanner.dialogs.DialogPermissions;
 import org.bitbatzen.wlanscanner.dialogs.DialogChannelWidth24GHz;
 import org.bitbatzen.wlanscanner.dialogs.DialogChannelWidth5GHz;
 import org.bitbatzen.wlanscanner.dialogs.DialogQuit;
@@ -31,6 +32,7 @@ import org.bitbatzen.wlanscanner.events.Events;
 import org.bitbatzen.wlanscanner.events.Events.EventID;
 import org.bitbatzen.wlanscanner.events.IEventListener;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -57,7 +59,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 
 
@@ -67,6 +68,12 @@ public class MainActivity extends Activity implements IEventListener {
 	public final static int FRAGMENT_ID_WLANLIST		= 0;
 	public final static int FRAGMENT_ID_DIAGRAM_24GHZ	= 1;
 	public final static int FRAGMENT_ID_DIAGRAM_5GHZ	= 2;
+
+	private final static String[] permissions = new String[] {
+		Manifest.permission.ACCESS_FINE_LOCATION,
+		Manifest.permission.ACCESS_WIFI_STATE,
+		Manifest.permission.CHANGE_WIFI_STATE
+	};
 
 	private ActionBar.Tab tab1, tab2, tab3;
 	private Fragment fragmentWLANList;
@@ -107,7 +114,7 @@ public class MainActivity extends Activity implements IEventListener {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         EventManager.sharedInstance().addListener(this, EventID.USER_QUIT);
         
         sharedPrefs = getPreferences(Context.MODE_PRIVATE);
@@ -156,7 +163,7 @@ public class MainActivity extends Activity implements IEventListener {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		ivButtonScan = (ImageView) inflater.inflate(R.layout.actionbutton_scan_image, null);
         animButtonScan = AnimationUtils.loadAnimation(this, R.anim.scan_pending_rotation);
-        
+
         wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         
         scanResultList = new ArrayList<ScanResult>();
@@ -169,10 +176,32 @@ public class MainActivity extends Activity implements IEventListener {
         };
 
         registerReceiver(brScanResults, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        
+
+        setAutoScanEnabled(true);
         startScan();
+
+        handlePermissions();
 	}
-    
+
+	public void handlePermissions() {
+    	List<String> permissionsToRequest = new ArrayList<String>();
+
+		for (int i = 0; i < permissions.length; i++) {
+			String p = permissions[i];
+			if (checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
+				permissionsToRequest.add(p);
+			}
+		}
+
+		if (! permissionsToRequest.isEmpty()) {
+			new DialogPermissions(this, permissionsToRequest).show();
+		}
+	}
+
+	public void requestPermissions(String[] permissions) {
+		requestPermissions(permissions, 111);
+	}
+
     @Override
     protected void onPause() {
     	super.onPause();
