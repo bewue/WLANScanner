@@ -15,45 +15,30 @@
         android:textSize="20sp"
         android:textStyle="bold" 
         android:text="@string/app_name" />
-    
-  	<TextView
-        android:id="@+id/tv_dialog_about_version_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/wlanscanner_dialog_text"
-        android:layout_gravity="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="Version" />
 
     <TextView
         android:id="@+id/tv_dialog_about_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/wlanscanner_dialog_text"
         android:layout_gravity="center"
-        android:textSize="18sp"
-        android:text="" />
-    
-  	<TextView
-        android:id="@+id/tv_dialog_about_feedback"
+        android:layout_marginBottom="8dp"
+        android:text=""
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:textSize="18sp" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/wlanscanner_dialog_text"
         android:layout_gravity="center"
-        android:textSize="18sp"
-        android:layout_marginTop="8dp"
-        android:textStyle="bold"
-        android:text="Feedback" />
-  	
- 	<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:autoLink="web"
+        android:text="@string/www"
         android:textColor="@color/wlanscanner_dialog_text"
-        android:layout_gravity="center"
-        android:textSize="18sp"
-        android:layout_marginBottom="12dp"
-        android:text="@string/dev_email" />
+        android:textSize="14sp" />
     
     <LinearLayout
         android:layout_width="wrap_content"

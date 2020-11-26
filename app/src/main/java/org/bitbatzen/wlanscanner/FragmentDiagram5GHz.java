@@ -19,17 +19,16 @@
 
 package org.bitbatzen.wlanscanner;
 
-import org.bitbatzen.wlanscanner.R;
-import org.bitbatzen.wlanscanner.events.EventManager;
-import org.bitbatzen.wlanscanner.events.IEventListener;
-import org.bitbatzen.wlanscanner.events.Events.EventID;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.bitbatzen.wlanscanner.events.EventManager;
+import org.bitbatzen.wlanscanner.events.Events.EventID;
+import org.bitbatzen.wlanscanner.events.IEventListener;
 
 
 public class FragmentDiagram5GHz 
@@ -54,8 +53,7 @@ public class FragmentDiagram5GHz
 		
         levelDiagram = (LevelDiagram5GHz) view.findViewById(R.id.levelDiagram5GHz);
         levelDiagram.updateDiagram(mainActivity.getScanResults());
-        levelDiagram.updateChannelBandwith(Util.getChannelWidth(mainActivity.getSelectedChannelWidth5GHz()));
-        
+
         getActivity().invalidateOptionsMenu();
 		
 		return view;
@@ -66,9 +64,6 @@ public class FragmentDiagram5GHz
 		switch (eventID) {
 		case SCAN_RESULT_CHANGED:
 			levelDiagram.updateDiagram(mainActivity.getScanResults());
-			break;
-		case OPTION_CHANNEL_WIDTH_CHANGED:
-			levelDiagram.updateChannelBandwith(Util.getChannelWidth(mainActivity.getSelectedChannelWidth5GHz()));
 			break;
 		default:
 			break;

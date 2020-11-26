@@ -19,8 +19,6 @@
 
 package org.bitbatzen.wlanscanner.dialogs;
 
-import org.bitbatzen.wlanscanner.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -29,6 +27,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.bitbatzen.wlanscanner.R;
 
 
 public class DialogAbout 
@@ -55,7 +55,7 @@ public class DialogAbout
 		buttonClose.setOnClickListener(this);
 
 		try {
-			String versionName = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
+			String versionName = "v" + activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
 			TextView tvVersion = (TextView) findViewById(R.id.tv_dialog_about_version);
 			tvVersion.setText(versionName);
 		}

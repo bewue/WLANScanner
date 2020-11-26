@@ -19,19 +19,20 @@
 
 package org.bitbatzen.wlanscanner;
 
+import android.net.wifi.ScanResult;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import android.net.wifi.ScanResult;
-
 
 public class SortingHelper {
 	
-	public static final int SORTING_OPTION_LEVEL 	= 0;
-	public static final int SORTING_OPTION_CHANNEL	= 1;
-	public static final int SORTING_OPTION_SSID 	= 2;
-	
+	public static final int SORTING_OPTION_LEVEL 			= 0;
+	public static final int SORTING_OPTION_CHANNEL			= 1;
+	public static final int SORTING_OPTION_CHANNEL_WIDTH 	= 2;
+	public static final int SORTING_OPTION_SSID 			= 3;
+
     private HashMap<Integer, String> sortingOptions;
 
     
@@ -39,6 +40,7 @@ public class SortingHelper {
     	sortingOptions = new HashMap<Integer, String>();
         sortingOptions.put(SORTING_OPTION_LEVEL, "Order by Level");
         sortingOptions.put(SORTING_OPTION_CHANNEL, "Order by Channel");
+		sortingOptions.put(SORTING_OPTION_CHANNEL_WIDTH, "Order by Channel Width");
         sortingOptions.put(SORTING_OPTION_SSID, "Order by SSID");
     }
     
@@ -82,22 +84,19 @@ public class SortingHelper {
     private static boolean compare(ScanResult v1, ScanResult v2, int sortingOption) {
 		switch (sortingOption) {
 			case SORTING_OPTION_LEVEL:
-				if (v1.level < v2.level) {
-					return true;
-				}
-				break;
+				return (v1.level < v2.level);
+
 			case SORTING_OPTION_CHANNEL:
-				if (v1.frequency > v2.frequency) {
-					return true;
-				}				
-				break;
+				return (v1.frequency > v2.frequency);
+
+			case SORTING_OPTION_CHANNEL_WIDTH:
+				return (Util.getChannelWidth(v1) > Util.getChannelWidth(v2));
+
 			case SORTING_OPTION_SSID:
-				if (v1.SSID.compareToIgnoreCase(v2.SSID) > 0) {
-					return true;
-				}
-				break;
+				return (v1.SSID.compareToIgnoreCase(v2.SSID) > 0);
+
+			default:
+				return false;
 		}
-		
-		return false;
     }
 }

@@ -19,10 +19,6 @@
 
 package org.bitbatzen.wlanscanner;
 
-import java.util.ArrayList;
-
-import org.bitbatzen.wlanscanner.R;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -30,10 +26,11 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Region;
 import android.net.wifi.ScanResult;
 import android.util.AttributeSet;
 import android.view.View;
+
+import java.util.ArrayList;
 
 
 public abstract class LevelDiagram extends View {
@@ -55,15 +52,13 @@ public abstract class LevelDiagram extends View {
 	protected Rect yLabelsBounds;
 	
 	protected RectF ovalRect;
-	
+
 	protected ArrayList<WLANDiagramItem> wlans;
+	protected ArrayList<WLANDiagramItem> wlanCache = new ArrayList<WLANDiagramItem>();
 
 	protected float rowsMarginLeft = 20;
 	protected float rowsMarginRight = 20;
-	
-	protected int currentChannelBandwith;
-	
-	
+
     abstract public void updateDiagram(ArrayList<ScanResult> scanResults);
     abstract public float getXAxisPos(int frequency);
     abstract void drawXAxisLabelsAndLines(Canvas canvas);
@@ -153,12 +148,7 @@ public abstract class LevelDiagram extends View {
 				(int) (borderRect.right - borderStrokeWidth / 2),
 				(int) (borderRect.bottom - borderStrokeWidth / 2));
     }
-    
-    public void updateChannelBandwith(int channelBandwith) {
-    	currentChannelBandwith = channelBandwith;
-    	invalidate();
-    }
-    
+
     protected float getLevelHeight(int dBm) {
     	float maxLevelHeight = innerRect.bottom - innerRect.top;
     	float levelHeight = maxLevelHeight * (1 - ((float) Math.abs(dBm) - 30) / 70);
@@ -183,7 +173,7 @@ public abstract class LevelDiagram extends View {
 		float startY = innerRect.bottom - offsetY;
 		for (int i = 0; i < yLabelsMax - 1; i++) {
 			float posY = startY - offsetY * i;
-			canvas.drawText(Integer.toString(-90 + i * 10), 0, posY + yLabelsBounds.height() / 2, yLabelsPaint);
+			canvas.drawText(Integer.toString(-90 + i * 10), 0, posY + yLabelsBounds.height() / 2f, yLabelsPaint);
 			canvas.drawLine(innerRect.left, posY, innerRect.right, posY, linesPaint);
 		}
 
@@ -196,8 +186,8 @@ public abstract class LevelDiagram extends View {
 			float levelHeight = getLevelHeight(wdi.dBm);
 			float levelY = innerRect.bottom - levelHeight;
 
-			float posXLeft = getXAxisPos(wdi.frequency - currentChannelBandwith / 2);
-			float posXRight = getXAxisPos(wdi.frequency + currentChannelBandwith / 2);
+			float posXLeft = getXAxisPos(wdi.frequency - wdi.channelWidth / 2);
+			float posXRight = getXAxisPos(wdi.frequency + wdi.channelWidth / 2);
 			
 			ovalRect.set(posXLeft, levelY, posXRight, innerRect.bottom + levelHeight);
 			ovalBorderPaint.setColor(wdi.color);
@@ -209,5 +199,40 @@ public abstract class LevelDiagram extends View {
 		
 		// ssid labels
 		drawSSIDLabels(canvas);
+	}
+
+	protected WLANDiagramItem checkWLANCache(WLANDiagramItem wdi) {
+		for (WLANDiagramItem w : wlanCache) {
+			if (w.SSID.equals(wdi.SSID) && w.BSSID.equals(wdi.BSSID)) {
+				return w;
+			}
+		}
+
+		return null;
+	}
+
+	protected void handleWLANDiagramItem(ScanResult sr) {
+		if (android.os.Build.VERSION.SDK_INT >= 23 && sr.channelWidth == ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ) {
+			createWLANDiagramItem(sr.SSID, sr.BSSID, sr.centerFreq0, Util.getChannelWidth(sr), sr.level);
+			createWLANDiagramItem(sr.SSID, sr.BSSID, sr.centerFreq1, Util.getChannelWidth(sr), sr.level);
+		}
+		else {
+			createWLANDiagramItem(sr.SSID, sr.BSSID, sr.frequency, Util.getChannelWidth(sr), sr.level);
+		}
+	}
+
+	private void createWLANDiagramItem(String SSID, String BSSID, int frequency, int channelWidth, int level) {
+		WLANDiagramItem wdi = new WLANDiagramItem(SSID, BSSID, frequency, channelWidth, level);
+		WLANDiagramItem cachedWLAN = checkWLANCache(wdi);
+
+		if (cachedWLAN != null) {
+			wdi.color = cachedWLAN.color;
+		}
+		else {
+			wdi.color = Util.getRandomColor(80, 180);
+			wlanCache.add(new WLANDiagramItem(wdi));
+		}
+
+		wlans.add(wdi);
 	}
  }

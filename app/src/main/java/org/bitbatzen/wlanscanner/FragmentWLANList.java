@@ -19,14 +19,7 @@
 
 package org.bitbatzen.wlanscanner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bitbatzen.wlanscanner.dialogs.DialogWLANListItemInfo;
-import org.bitbatzen.wlanscanner.events.EventManager;
-import org.bitbatzen.wlanscanner.events.Events.EventID;
-import org.bitbatzen.wlanscanner.events.IEventListener;
-
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -43,7 +36,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import org.bitbatzen.wlanscanner.dialogs.DialogWLANListItemInfo;
+import org.bitbatzen.wlanscanner.events.EventManager;
+import org.bitbatzen.wlanscanner.events.Events.EventID;
+import org.bitbatzen.wlanscanner.events.IEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
+@TargetApi(29)
 public class FragmentWLANList 
 		extends Fragment 
 		implements OnItemClickListener, OnItemSelectedListener, IEventListener {
@@ -64,7 +66,7 @@ public class FragmentWLANList
     	mainActivity = (MainActivity) activity;
     	EventManager.sharedInstance().addListener(this, EventID.SCAN_RESULT_CHANGED);
     }
-    
+
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_wlan_list, container, false);
@@ -75,6 +77,7 @@ public class FragmentWLANList
     	List<String> list = new ArrayList<String>();
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_LEVEL));
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL));
+		list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL_WIDTH));
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_SSID));
     	ArrayAdapter<String> sortingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, list);
 		sortingSpinner.setAdapter(sortingAdapter);
@@ -99,7 +102,8 @@ public class FragmentWLANList
         
 		return view;
     }
-    
+
+
     @Override
     public void onPause() {
     	super.onPause();

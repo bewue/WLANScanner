@@ -22,13 +22,13 @@
 
     <Spinner
         android:id="@+id/spinnerSorting"
-        android:layout_width="170dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/wlanscanner_button_bg"
-        android:popupBackground="@color/wlanscanner_spinner_popup_bg"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="5dp"
-        android:minHeight="43dp" />
+        android:background="@color/wlanscanner_diagram_lines"
+        android:minHeight="43dp"
+        android:popupBackground="@color/wlanscanner_spinner_popup_bg" />
 
 </RelativeLayout>

@@ -14,12 +14,10 @@
 	
 	<color name="wlanscanner_list_divider">#333333</color>
 	<color name="wlanscanner_list_ssid">#aaaaaa</color>
-	<color name="wlanscanner_list_capabilities">#888888</color>
-	<color name="wlanscanner_list_mac">#888888</color>
-	<color name="wlanscanner_list_frequencyband">#666666</color>
-	<color name="wlanscanner_list_channel">#888888</color>
-	<color name="wlanscanner_list_level">#888888</color>
-	
+	<color name="wlanscanner_list_item_bg">#222222</color>
+	<color name="wlanscanner_list_item_color1">#666666</color>
+	<color name="wlanscanner_list_item_color2">#888888</color>
+
 	<color name="wlanscanner_diagram_bg">#222222</color>
 	<color name="wlanscanner_diagram_labels">#666666</color>
 	<color name="wlanscanner_diagram_border">#666666</color>

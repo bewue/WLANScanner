@@ -19,19 +19,6 @@
 
 package org.bitbatzen.wlanscanner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
-import org.bitbatzen.wlanscanner.dialogs.DialogPermissions;
-import org.bitbatzen.wlanscanner.dialogs.DialogChannelWidth24GHz;
-import org.bitbatzen.wlanscanner.dialogs.DialogChannelWidth5GHz;
-import org.bitbatzen.wlanscanner.dialogs.DialogQuit;
-import org.bitbatzen.wlanscanner.events.EventManager;
-import org.bitbatzen.wlanscanner.events.Events;
-import org.bitbatzen.wlanscanner.events.Events.EventID;
-import org.bitbatzen.wlanscanner.events.IEventListener;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -42,10 +29,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,7 +47,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import android.content.pm.PackageManager;
+import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
+import org.bitbatzen.wlanscanner.dialogs.DialogPermissions;
+import org.bitbatzen.wlanscanner.dialogs.DialogQuit;
+import org.bitbatzen.wlanscanner.events.EventManager;
+import org.bitbatzen.wlanscanner.events.Events;
+import org.bitbatzen.wlanscanner.events.Events.EventID;
+import org.bitbatzen.wlanscanner.events.IEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -102,15 +99,9 @@ public class MainActivity extends Activity implements IEventListener {
     private boolean scanIsRunning;
     private boolean scanRequested;
     
-//	AlertDialog levelDialog;
-    
-    private int selectedChannelWidth24GHz;
-    private int selectedChannelWidth5GHz;
-    
     private SharedPreferences sharedPrefs;
     
-	
-    @TargetApi(Build.VERSION_CODES.M)
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,8 +111,6 @@ public class MainActivity extends Activity implements IEventListener {
         sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         autoRefreshEnabled = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_autoRefreshEnabled), false);
         wlanEnabledByApp = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_wlanEnabledByApp), false);
-        selectedChannelWidth24GHz = sharedPrefs.getInt(getString(R.string.sharedPrefs_bandwithOption24GHz), Util.CHANNEL_WIDTH_OPTION_20_MHZ);
-        selectedChannelWidth5GHz = sharedPrefs.getInt(getString(R.string.sharedPrefs_bandwithOption5GHz), Util.CHANNEL_WIDTH_OPTION_20_MHZ);
         currentFragmentID = sharedPrefs.getInt(getString(R.string.sharedPrefs_selectedTab), FRAGMENT_ID_WLANLIST);
         
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -164,7 +153,7 @@ public class MainActivity extends Activity implements IEventListener {
 		ivButtonScan = (ImageView) inflater.inflate(R.layout.actionbutton_scan_image, null);
         animButtonScan = AnimationUtils.loadAnimation(this, R.anim.scan_pending_rotation);
 
-        wm = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         
         scanResultList = new ArrayList<ScanResult>();
         
@@ -180,10 +169,14 @@ public class MainActivity extends Activity implements IEventListener {
         setAutoScanEnabled(true);
         startScan();
 
-        handlePermissions();
+		handlePermissions();
 	}
 
 	public void handlePermissions() {
+		if (android.os.Build.VERSION.SDK_INT < 23) {
+			return;
+		}
+
     	List<String> permissionsToRequest = new ArrayList<String>();
 
 		for (int i = 0; i < permissions.length; i++) {
@@ -209,8 +202,6 @@ public class MainActivity extends Activity implements IEventListener {
     	SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
         editor.putBoolean(getString(R.string.sharedPrefs_autoRefreshEnabled), autoRefreshEnabled);
         editor.putBoolean(getString(R.string.sharedPrefs_wlanEnabledByApp), wlanEnabledByApp);
-        editor.putInt(getString(R.string.sharedPrefs_bandwithOption24GHz), selectedChannelWidth24GHz);
-        editor.putInt(getString(R.string.sharedPrefs_bandwithOption5GHz), selectedChannelWidth5GHz);
         editor.putInt(getString(R.string.sharedPrefs_selectedTab), currentFragmentID);
         editor.commit();
     }
@@ -244,20 +235,6 @@ public class MainActivity extends Activity implements IEventListener {
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// buttonSettings
-		MenuItem buttonSettings = menu.findItem(R.id.actionbutton_channel_width);
-		switch (currentFragmentID) {
-		case FRAGMENT_ID_WLANLIST:
-			buttonSettings.setVisible(false);
-			break;
-		case FRAGMENT_ID_DIAGRAM_24GHZ:
-			buttonSettings.setVisible(true);
-			break;
-		case FRAGMENT_ID_DIAGRAM_5GHZ:
-			buttonSettings.setVisible(true);
-			break;
-		}
-		
 		// buttonAutoRefresh
     	if (autoRefreshEnabled) {
     		buttonAutoRefresh.setIcon(R.drawable.ic_autorefresh_on);
@@ -298,9 +275,6 @@ public class MainActivity extends Activity implements IEventListener {
 	        	}
 	        	invalidateOptionsMenu();
 	            return true;
-	        case R.id.actionbutton_channel_width:
-	        	createChannelWidthDialog();
-	            return true;
 	        case R.id.actionbutton_about:
 	        	new DialogAbout(this).show();
 	        	return true;
@@ -309,23 +283,28 @@ public class MainActivity extends Activity implements IEventListener {
 	    }
 	}
 	
-	@TargetApi(17)
 	private void onReceivedScanResults() {
     	if (!scanRequested) {
     		return;
     	}
-    		
+
     	List<ScanResult> scanResults = wm.getScanResults();
     	scanResultList.clear();
+
     	for (ScanResult sr : scanResults) {
-    		scanResultList.add(sr);
+    		boolean addScanResult = true;
+
     		if (android.os.Build.VERSION.SDK_INT >= 17) {
-    			// TODO: filter out to old ScanResults
-//        		Date d = new Date(sr.timestamp);
-//        		Log.d("++++++++++", sr.SSID + " : " + sr.timestamp);    			
+				long age = ((SystemClock.elapsedRealtime() * 1000) - sr.timestamp) / 1000000;
+				// if the wlan was last seen more than 10 seconds ago, do not add it to the list
+				addScanResult = (age < 10);
     		}
+
+    		if (addScanResult) {
+				scanResultList.add(sr);
+			}
     	}
-    	
+
     	scanIsRunning = false;
     	scanRequested = false;
 
@@ -342,17 +321,6 @@ public class MainActivity extends Activity implements IEventListener {
     	
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
     	invalidateOptionsMenu();
-	}
-	
-	private void createChannelWidthDialog() {
-		switch (currentFragmentID) {
-		case FRAGMENT_ID_DIAGRAM_24GHZ:
-			new DialogChannelWidth24GHz(this).show();			
-			break;
-		case FRAGMENT_ID_DIAGRAM_5GHZ:
-			new DialogChannelWidth5GHz(this).show();
-			break;
-		}
 	}
 	
 	private void setWLANEnabled(boolean enable) {
@@ -408,22 +376,6 @@ public class MainActivity extends Activity implements IEventListener {
     	return scanIsRunning;
     }
     
-    public void setSelectedChannelWidth24GHz(int channelWidthOption) {
-    	selectedChannelWidth24GHz = channelWidthOption;
-    }
-    
-    public void setSelectedChannelWidth5GHz(int channelWidthOption) {
-    	selectedChannelWidth5GHz = channelWidthOption;
-    }
-    
-    public int getSelectedChannelWidth24GHz() {
-    	return selectedChannelWidth24GHz;
-    }
-    
-    public int getSelectedChannelWidth5GHz() {
-    	return selectedChannelWidth5GHz;
-    }
-    
 	public void setCurrentFragmentID(int fragmentID) {
 		currentFragmentID = fragmentID;
 	}
@@ -438,8 +390,6 @@ public class MainActivity extends Activity implements IEventListener {
 		case USER_QUIT:
         	autoRefreshEnabled = false;
         	setWLANEnabled(false);
-        	selectedChannelWidth24GHz = Util.CHANNEL_WIDTH_OPTION_20_MHZ;
-        	selectedChannelWidth5GHz = Util.CHANNEL_WIDTH_OPTION_20_MHZ;
         	currentFragmentID = FRAGMENT_ID_WLANLIST;
 			finish();
 			break;

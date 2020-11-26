@@ -19,22 +19,19 @@
 
 package org.bitbatzen.wlanscanner;
 
-import java.util.ArrayList;
-import java.util.Map.Entry;
-
-import org.bitbatzen.wlanscanner.Util.FrequencyBand;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.net.wifi.ScanResult;
 import android.util.AttributeSet;
 
+import org.bitbatzen.wlanscanner.Util.FrequencyBand;
+
+import java.util.ArrayList;
+import java.util.Map.Entry;
+
 
 public class LevelDiagram24GHz extends LevelDiagram {
   
-	private static ArrayList<WLANDiagramItem> wlansOld = new ArrayList<WLANDiagramItem>();
-
-	
 	public LevelDiagram24GHz(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 	}
@@ -43,35 +40,12 @@ public class LevelDiagram24GHz extends LevelDiagram {
     public void updateDiagram(ArrayList<ScanResult> scanResults) {
     	wlans.clear();
     	for (ScanResult sr : scanResults) {
-    		if (Util.getFrequencyBand(sr.frequency) != FrequencyBand.TWO_FOUR_GHZ) {
-    			continue;
-    		}
-    		
-    		WLANDiagramItem wdi = new WLANDiagramItem(sr.SSID, sr.BSSID, sr.frequency, sr.level);
-    		WLANDiagramItem wlanOld = checkWLANSOld(wdi);
-    		
-    		if (wlanOld != null) {
-    			wdi.color = wlanOld.color; 
-    		}
-    		else {
-    			wdi.color = Util.getRandomColor(80, 180);
-    			wlansOld.add(new WLANDiagramItem(wdi));
-    		}
-    		
-    		wlans.add(wdi);
-    	}	
-    	
-    	invalidate();
-    }
-    
-    private WLANDiagramItem checkWLANSOld(WLANDiagramItem wdi) {
-    	for (WLANDiagramItem w : wlansOld) {
-    		if (w.SSID.equals(wdi.SSID) && w.BSSID.equals(wdi.BSSID)) {
-    			return w;
+    		if (Util.getFrequencyBand(sr.frequency) == FrequencyBand.TWO_FOUR_GHZ) {
+				handleWLANDiagramItem(sr);
     		}
     	}
     	
-    	return null;
+    	invalidate();
     }
     
     @Override
@@ -93,14 +67,14 @@ public class LevelDiagram24GHz extends LevelDiagram {
     
     @Override
     protected void drawXAxisLabelsAndLines(Canvas canvas) {
-    	for (Entry<Integer, Integer> entry : Util.channels24GHzBand.entrySet()) {
+    	for (Entry<Integer, Integer> entry : Util.CHANNELS_24GHZ_BAND.entrySet()) {
     		float posX = getXAxisPos(entry.getKey());
     		canvas.drawLine(posX, innerRect.bottom, posX, innerRect.top, linesPaint);
     		canvas.drawText(Integer.toString(entry.getValue()), posX, getHeight(), xLabelsPaint);
         }
     }
     
-    @Override 
+    @Override
     protected void drawSSIDLabels(Canvas canvas) {
 		for (WLANDiagramItem wdi : wlans) {
 			float levelHeight = getLevelHeight(wdi.dBm);

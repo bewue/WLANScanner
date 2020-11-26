@@ -19,6 +19,7 @@
 
 package org.bitbatzen.wlanscanner;
 
+import android.net.wifi.ScanResult;
 import android.graphics.Color;
 
 import java.util.Collections;
@@ -28,21 +29,15 @@ import java.util.Map.Entry;
 
 
 public class Util {
-	
-	public final static int CHANNEL_WIDTH_OPTION_20_MHZ		= 0;
-	public final static int CHANNEL_WIDTH_OPTION_22_MHZ 	= 1;
-	public final static int CHANNEL_WIDTH_OPTION_40_MHZ 	= 2;
-	public final static int CHANNEL_WIDTH_OPTION_80_MHZ 	= 3;
-	public final static int CHANNEL_WIDTH_OPTION_160_MHZ	= 4;
-	
+
 	public enum FrequencyBand {
 		FIVE_GHZ,
 		TWO_FOUR_GHZ,
 		UNKOWN
 	}
 	
-    public static final Map<Integer, Integer> channels24GHzBand;
-    public static final Map<Integer, Integer> channels5GHzBand;
+    public static final Map<Integer, Integer> CHANNELS_24GHZ_BAND;
+    public static final Map<Integer, Integer> CHANNELS_5GHZ_BAND;
 
     public static final int START_24GHZ_BAND = 2412;
     public static final int END_24GHZ_BAND = 2484;
@@ -66,7 +61,7 @@ public class Util {
         aMap.put(2467, 12);
         aMap.put(2472, 13);
         aMap.put(2484, 14);
-        channels24GHzBand = Collections.unmodifiableMap(aMap);
+        CHANNELS_24GHZ_BAND = Collections.unmodifiableMap(aMap);
         
     	aMap = new HashMap<Integer, Integer>();
     	aMap.put(4915, 183);
@@ -134,28 +129,29 @@ public class Util {
 		aMap.put(5825, 165);
 		aMap.put(5845, 169);
 		aMap.put(5865, 173);
-        channels5GHzBand = Collections.unmodifiableMap(aMap);
+        CHANNELS_5GHZ_BAND = Collections.unmodifiableMap(aMap);
     }
 
 	public static FrequencyBand getFrequencyBand(int frequency) {
-		if (channels24GHzBand.containsKey(frequency)) {
+		if (CHANNELS_24GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.TWO_FOUR_GHZ;
 		}
-		else if (channels5GHzBand.containsKey(frequency)) {
+		else if (CHANNELS_5GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.FIVE_GHZ;
 		}
 		else {
+			System.out.print("Util.getFrequencyBand() -- Unkown Frequency: " + frequency);
 			return FrequencyBand.UNKOWN;
 		}
 	}
 	
 	public static int getFrequencyFromChannel(int channel) {
-        for (Entry<Integer, Integer> entry : channels24GHzBand.entrySet()) {
+        for (Entry<Integer, Integer> entry : CHANNELS_24GHZ_BAND.entrySet()) {
             if (entry.getValue() == channel) {
             	return entry.getKey();
             }
         }
-        for (Entry<Integer, Integer> entry : channels5GHzBand.entrySet()) {
+        for (Entry<Integer, Integer> entry : CHANNELS_5GHZ_BAND.entrySet()) {
             if (entry.getValue() == channel) {
             	return entry.getKey();
             }
@@ -165,14 +161,35 @@ public class Util {
 	}
 
 	public static int getChannelFromFrequency(int frequency) {
-		if (channels24GHzBand.containsKey(frequency)) {
-			return channels24GHzBand.get(frequency);
+		if (CHANNELS_24GHZ_BAND.containsKey(frequency)) {
+			return CHANNELS_24GHZ_BAND.get(frequency);
 		}
-		else if (channels5GHzBand.containsKey(frequency)) {
-			return channels5GHzBand.get(frequency);
+		else if (CHANNELS_5GHZ_BAND.containsKey(frequency)) {
+			return CHANNELS_5GHZ_BAND.get(frequency);
 		}
 		else {
 			return -1;
+		}
+	}
+
+	public static int getChannelWidth(ScanResult sr) {
+		if (android.os.Build.VERSION.SDK_INT < 23) {
+			return 20;
+		}
+
+		switch (sr.channelWidth) {
+			case ScanResult.CHANNEL_WIDTH_20MHZ:
+				return 20;
+			case ScanResult.CHANNEL_WIDTH_40MHZ:
+				return 40;
+			case ScanResult.CHANNEL_WIDTH_80MHZ:
+			case ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ:
+				return 80;
+			case ScanResult.CHANNEL_WIDTH_160MHZ:
+				return 160;
+			default:
+				System.out.print("Util.getChannelWidth() -- Unkown Channel Width ID: " + sr.channelWidth);
+				return 20;
 		}
 	}
 	
@@ -207,22 +224,5 @@ public class Util {
     	int b = (int) (Math.random() * (max - min) + min);
     	
     	return Color.rgb(r, g, b);
-    }
-    
-    public static int getChannelWidth(int channelWidthOption) {
-    	switch (channelWidthOption) {
-		case CHANNEL_WIDTH_OPTION_20_MHZ:
-			return 20;
-		case CHANNEL_WIDTH_OPTION_22_MHZ:
-			return 22;
-		case CHANNEL_WIDTH_OPTION_40_MHZ:
-			return 40;
-		case CHANNEL_WIDTH_OPTION_80_MHZ:
-			return 80;
-		case CHANNEL_WIDTH_OPTION_160_MHZ:
-			return 160;
-		default:
-			return -1;
-		}
     }
 }

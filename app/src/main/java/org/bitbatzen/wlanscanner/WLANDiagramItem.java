@@ -25,6 +25,7 @@ public class WLANDiagramItem {
 	String SSID;
 	String BSSID;
 	int frequency;
+	int channelWidth;
 	int dBm;
 	
 	int color;
@@ -33,18 +34,20 @@ public class WLANDiagramItem {
 	public WLANDiagramItem() {
 	}
 	
-	public WLANDiagramItem(String SSID, String BSSID, int frequency, int dBm) {
-		this.SSID 		= SSID;
-		this.BSSID 		= BSSID;
-		this.frequency 	= frequency;
-		this.dBm 		= dBm;
+	public WLANDiagramItem(String SSID, String BSSID, int frequency, int channelWidth, int dBm) {
+		this.SSID 			= SSID;
+		this.BSSID 			= BSSID;
+		this.frequency 		= frequency;
+		this.channelWidth	= channelWidth;
+		this.dBm 			= dBm;
 	}
 	
 	public WLANDiagramItem(WLANDiagramItem wdi) {
-		this.SSID 		= wdi.SSID;
-		this.BSSID 		= wdi.BSSID;
-		this.frequency	= wdi.frequency;
-		this.dBm		= wdi.dBm;
-		this.color		= wdi.color;
+		this.SSID 			= wdi.SSID;
+		this.BSSID 			= wdi.BSSID;
+		this.frequency		= wdi.frequency;
+		this.channelWidth	= wdi.channelWidth;
+		this.dBm			= wdi.dBm;
+		this.color			= wdi.color;
 	}
 }

@@ -19,8 +19,6 @@
 
 package org.bitbatzen.wlanscanner;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.util.TypedValue;
@@ -29,6 +27,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 class ArrayAdapterWLAN extends BaseAdapter {
@@ -69,39 +69,50 @@ class ArrayAdapterWLAN extends BaseAdapter {
         }
         
         ScanResult itemData = data.get(position);
-        TextView tvText;
-        
-        tvText = (TextView) view.findViewById(R.id.rowItemSSID);
-        tvText.setText(itemData.SSID);
-        tvText = (TextView) view.findViewById(R.id.rowItemCapabilities);
-        tvText.setText(Util.getCapabilitiesShortString(itemData.capabilities));
-        tvText = (TextView) view.findViewById(R.id.rowItemBSSID);
-        tvText.setText(itemData.BSSID);
-        
-        tvText = (TextView) view.findViewById(R.id.rowItemLevel);
-        tvText.setText(Integer.toString(itemData.level) + " dBm");
-        
-        tvText = (TextView) view.findViewById(R.id.rowItemChannel);
-        int channel = Util.getChannelFromFrequency(itemData.frequency);
-        tvText.setText("CH " + Integer.toString(channel));
-        float paddingRight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 140, parent.getResources().getDisplayMetrics());
-        float posXTVChannel = parent.getWidth() - paddingRight;
-        tvText.setX(posXTVChannel);
-        
-        tvText = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
+
+        // ssid
+        TextView ssidItem = (TextView) view.findViewById(R.id.rowItemSSID);
+        ssidItem.setText(itemData.SSID);
+
+        // frequency band
+        TextView bandItem = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
         Util.FrequencyBand fBand = Util.getFrequencyBand(itemData.frequency);
+        String text = "";
         if (fBand == Util.FrequencyBand.TWO_FOUR_GHZ) {
-        	tvText.setText("2.4GHz");
+            text = "2.4 GHz";
         }
         else if (fBand == Util.FrequencyBand.FIVE_GHZ) {
-        	tvText.setText("5GHz");
+            text = "5 GHz";
         }
-        else {
-        	tvText.setText("");
+        bandItem.setText(text);
+
+        // capabilities
+        TextView capabilitiesItem = (TextView) view.findViewById(R.id.rowItemCapabilities);
+        capabilitiesItem.setText(Util.getCapabilitiesShortString(itemData.capabilities));
+
+        // bssid (mac)
+        TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);
+        bssidItem.setText(itemData.BSSID);
+
+        // level
+        TextView levelItem = (TextView) view.findViewById(R.id.rowItemLevel);
+        levelItem.setText(Integer.toString(itemData.level) + " dBm");
+
+        // channel
+        TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
+        int channel = Util.getChannelFromFrequency(itemData.frequency);
+        channelItem.setText(Integer.toString(channel));
+        float cOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 165, parent.getResources().getDisplayMetrics());
+        channelItem.setX(parent.getWidth() - cOffset);
+
+        // channel width
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            TextView channelWidthItem = (TextView) view.findViewById(R.id.rowItemChannelWidth);
+            channelWidthItem.setText(Util.getChannelWidth(itemData) + " MHz");
+            float cwOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 130, parent.getResources().getDisplayMetrics());
+            channelWidthItem.setX(parent.getWidth() - cwOffset);
         }
-        paddingRight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 45, parent.getResources().getDisplayMetrics());
-        tvText.setX(posXTVChannel - paddingRight);
-        
+
         return view;
     }
 }
