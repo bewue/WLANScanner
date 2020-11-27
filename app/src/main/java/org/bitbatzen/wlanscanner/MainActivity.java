@@ -20,7 +20,6 @@
 package org.bitbatzen.wlanscanner;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -35,7 +34,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -78,12 +76,8 @@ public class MainActivity extends Activity implements IEventListener {
 	private Fragment fragmentDiagram5GHz;
 	private int currentFragmentID;
 	
-	private MenuItem buttonScan;
-	private ImageView ivButtonScan;
-    private Animation animButtonScan;
-    
-	private MenuItem buttonAutoRefresh;
-	
+	private MenuItem buttonToggleScan;
+
 	private ImageView ivScanResultIndicator;
 	private Animation animScanResultIndicator;
 	
@@ -96,8 +90,7 @@ public class MainActivity extends Activity implements IEventListener {
     private boolean wlanEnabledByApp;
     private boolean autoRefreshEnabled;
     
-    private boolean scanIsRunning;
-    private boolean scanRequested;
+    private boolean scanEnabled;
     
     private SharedPreferences sharedPrefs;
     
@@ -109,7 +102,7 @@ public class MainActivity extends Activity implements IEventListener {
         EventManager.sharedInstance().addListener(this, EventID.USER_QUIT);
         
         sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-        autoRefreshEnabled = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_autoRefreshEnabled), false);
+        scanEnabled = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_scanEnabled), true);
         wlanEnabledByApp = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_wlanEnabledByApp), false);
         currentFragmentID = sharedPrefs.getInt(getString(R.string.sharedPrefs_selectedTab), FRAGMENT_ID_WLANLIST);
         
@@ -118,7 +111,7 @@ public class MainActivity extends Activity implements IEventListener {
         setContentView(R.layout.activity_main);
         
         FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
-        View.inflate(this, R.layout.new_scanresults_indicator_image, rootLayout);
+        View.inflate(this, R.layout.scanresults_indicator_image, rootLayout);
         ivScanResultIndicator = (ImageView) findViewById(R.id.iv_scanresults_indicator);
         ivScanResultIndicator.setVisibility(View.INVISIBLE);
         
@@ -149,10 +142,6 @@ public class MainActivity extends Activity implements IEventListener {
         tab3.setTabListener(new MyTabListener(this, fragmentDiagram5GHz));
         actionBar.addTab(tab3, 2, currentFragmentID == 2);
         
-		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ivButtonScan = (ImageView) inflater.inflate(R.layout.actionbutton_scan_image, null);
-        animButtonScan = AnimationUtils.loadAnimation(this, R.anim.scan_pending_rotation);
-
         wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         
         scanResultList = new ArrayList<ScanResult>();
@@ -166,7 +155,6 @@ public class MainActivity extends Activity implements IEventListener {
 
         registerReceiver(brScanResults, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
-        setAutoScanEnabled(true);
         startScan();
 
 		handlePermissions();
@@ -200,7 +188,7 @@ public class MainActivity extends Activity implements IEventListener {
     	super.onPause();
     	
     	SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
-        editor.putBoolean(getString(R.string.sharedPrefs_autoRefreshEnabled), autoRefreshEnabled);
+        editor.putBoolean(getString(R.string.sharedPrefs_scanEnabled), scanEnabled);
         editor.putBoolean(getString(R.string.sharedPrefs_wlanEnabledByApp), wlanEnabledByApp);
         editor.putInt(getString(R.string.sharedPrefs_selectedTab), currentFragmentID);
         editor.commit();
@@ -227,52 +215,28 @@ public class MainActivity extends Activity implements IEventListener {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.actionbar_buttons, menu);
 	    
-	    buttonScan = menu.findItem(R.id.actionbutton_startscan);
-	    buttonAutoRefresh = menu.findItem(R.id.actionbutton_autorefresh);
+	    buttonToggleScan = menu.findItem(R.id.actionbutton_toggle_scan);
 	    
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// buttonAutoRefresh
-    	if (autoRefreshEnabled) {
-    		buttonAutoRefresh.setIcon(R.drawable.ic_autorefresh_on);
-    	}
-    	else if (!autoRefreshEnabled) {
-    		buttonAutoRefresh.setIcon(R.drawable.ic_autorefresh_off);
-    	}
-    	
-    	// buttonScan
-    	if (scanIsRunning) {
-    		if (ivButtonScan.getAnimation() == null) {
-    			ivButtonScan.startAnimation(animButtonScan);
-    		}
-    		buttonScan.setActionView(ivButtonScan);
-    	}
-    	else if (!scanIsRunning) {
-    		ivButtonScan.clearAnimation();
-    		buttonScan.setActionView(null);
-    	}
-    	
+		if (scanEnabled) {
+			buttonToggleScan.setIcon(R.drawable.ic_pause);
+		}
+		else {
+			buttonToggleScan.setIcon(R.drawable.ic_play);
+		}
+
 	    return super.onPrepareOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
-	        case R.id.actionbutton_startscan:
-	        	startScan();
-	        	invalidateOptionsMenu();
-	            return true;
-	        case R.id.actionbutton_autorefresh:
-	        	autoRefreshEnabled = !autoRefreshEnabled;
-	        	if (autoRefreshEnabled) {
-	        		startScan();
-	        	}
-	        	else {
-	        		cancelScan();
-	        	}
+	        case R.id.actionbutton_toggle_scan:
+				setScanEnabled(! scanEnabled);
 	        	invalidateOptionsMenu();
 	            return true;
 	        case R.id.actionbutton_about:
@@ -284,7 +248,7 @@ public class MainActivity extends Activity implements IEventListener {
 	}
 	
 	private void onReceivedScanResults() {
-    	if (!scanRequested) {
+    	if (! scanEnabled) {
     		return;
     	}
 
@@ -305,12 +269,7 @@ public class MainActivity extends Activity implements IEventListener {
 			}
     	}
 
-    	scanIsRunning = false;
-    	scanRequested = false;
-
-    	if (autoRefreshEnabled) {
-    		startScan();
-    	}
+		startScan();
 
     	Animation anim = ivScanResultIndicator.getAnimation();
     	if (anim == null || (anim != null && anim.hasEnded())) {
@@ -346,36 +305,20 @@ public class MainActivity extends Activity implements IEventListener {
     	toast.show();
 	}
 
-    public void startScan() {
-    	 setWLANEnabled(true);
-    	 
-    	if (!scanIsRunning) {
-            wm.startScan();
-            scanIsRunning = true;
-            scanRequested = true;
-    	}
-    }
-    
-    private void cancelScan() {
-    	scanRequested = false;
-    	scanIsRunning = false;
-    }
-
-    public void setAutoScanEnabled(boolean enabled) {
-    	autoRefreshEnabled = enabled;
-    	if (autoRefreshEnabled) {
+	private void setScanEnabled(boolean enable) {
+		scanEnabled = enable;
+		if (enable) {
 			startScan();
-    	}
-    }
-    
-    public boolean getAutoScanEnabled() {
-    	return autoRefreshEnabled;
-    }
-    
-    public boolean getScanIsRunning() {
-    	return scanIsRunning;
-    }
-    
+		}
+	}
+
+	private void startScan() {
+		setWLANEnabled(true);
+		if (scanEnabled) {
+			wm.startScan();
+		}
+	}
+
 	public void setCurrentFragmentID(int fragmentID) {
 		currentFragmentID = fragmentID;
 	}
@@ -388,11 +331,15 @@ public class MainActivity extends Activity implements IEventListener {
 	public void handleEvent(EventID eventID) {
 		switch (eventID) {
 		case USER_QUIT:
-        	autoRefreshEnabled = false;
+        	setScanEnabled(false);
         	setWLANEnabled(false);
-        	currentFragmentID = FRAGMENT_ID_WLANLIST;
+
+        	currentFragmentID 	= FRAGMENT_ID_WLANLIST;
+        	scanEnabled 		= true;
+
 			finish();
 			break;
+
 		default:
 			break;
 		}
