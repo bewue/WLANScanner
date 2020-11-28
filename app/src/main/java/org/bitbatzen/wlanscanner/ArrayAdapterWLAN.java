@@ -20,6 +20,7 @@
 package org.bitbatzen.wlanscanner;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -107,6 +108,15 @@ class ArrayAdapterWLAN extends BaseAdapter {
         // level
         TextView levelItem = (TextView) view.findViewById(R.id.rowItemLevel);
         levelItem.setText(Integer.toString(itemData.level) + " dBm");
+        if (itemData.level >= -65) {
+            levelItem.setBackgroundColor(Color.rgb(41, 163, 41));
+        }
+        else if (itemData.level >= -85) {
+            levelItem.setBackgroundColor(Color.rgb(204, 204, 0));
+        }
+        else {
+            levelItem.setBackgroundColor(Color.rgb(230, 46, 0));
+        }
 
         // channel
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);

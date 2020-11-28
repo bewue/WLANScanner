@@ -34,7 +34,7 @@ public class Util {
 	public enum FrequencyBand {
 		FIVE_GHZ,
 		TWO_FOUR_GHZ,
-		UNKOWN
+		UNKNOWN
 	}
 	
     public static final Map<Integer, Integer> CHANNELS_24GHZ_BAND;
@@ -142,7 +142,7 @@ public class Util {
 		}
 		else {
 			Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
-			return FrequencyBand.UNKOWN;
+			return FrequencyBand.UNKNOWN;
 		}
 	}
 	

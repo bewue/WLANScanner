@@ -19,8 +19,12 @@
         android:layout_alignBaseline="@+id/rowItemBSSID"
         android:layout_alignBottom="@+id/rowItemBSSID"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:textColor="@color/wlanscanner_list_item_color2"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="3dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:textColor="@color/wlanscanner_diagram_bg"
         android:textSize="16sp" />
 
     <TextView
