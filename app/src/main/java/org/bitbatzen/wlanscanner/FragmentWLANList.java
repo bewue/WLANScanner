@@ -36,7 +36,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import org.bitbatzen.wlanscanner.dialogs.DialogWLANListItemInfo;
 import org.bitbatzen.wlanscanner.events.EventManager;
 import org.bitbatzen.wlanscanner.events.Events.EventID;
 import org.bitbatzen.wlanscanner.events.IEventListener;
@@ -80,6 +79,10 @@ public class FragmentWLANList
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL));
 		list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL_WIDTH));
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_SSID));
+		if (android.os.Build.VERSION.SDK_INT >= 30) {
+			list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_WLAN_STANDARD));
+		}
+
     	ArrayAdapter<String> sortingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, list);
 		sortingSpinner.setAdapter(sortingAdapter);
 		sortingSpinner.setOnItemSelectedListener(this);
@@ -103,7 +106,6 @@ public class FragmentWLANList
         
 		return view;
     }
-
 
     @Override
     public void onPause() {
@@ -130,10 +132,10 @@ public class FragmentWLANList
     
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		ScanResult scanResult = (ScanResult) wlanAdapter.getItem(position);
-        
-        DialogWLANListItemInfo dialogwlii = new DialogWLANListItemInfo(getActivity(), scanResult.SSID, scanResult.capabilities, Integer.toString(scanResult.frequency));
-        dialogwlii.show();
+//    	ScanResult scanResult = (ScanResult) wlanAdapter.getItem(position);
+
+//		DialogWLANListItemInfo dialogwlii = new DialogWLANListItemInfo(getActivity(), scanResult.SSID, scanResult.capabilities, Integer.toString(scanResult.frequency));
+//		dialogwlii.show();
 	}
 
 	@Override

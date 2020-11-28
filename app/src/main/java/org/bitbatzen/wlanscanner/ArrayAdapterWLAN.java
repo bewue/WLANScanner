@@ -86,9 +86,19 @@ class ArrayAdapterWLAN extends BaseAdapter {
         }
         bandItem.setText(text);
 
+        // wlan standard
+        TextView wlanStandard = (TextView) view.findViewById(R.id.rowItemWLANStandard);
+        String sWlanStandard = Util.getWLANStandard(itemData);
+        if (sWlanStandard == "") {
+            wlanStandard.setVisibility(View.INVISIBLE);
+        }
+        else {
+            wlanStandard.setText(sWlanStandard);
+        }
+
         // capabilities
         TextView capabilitiesItem = (TextView) view.findViewById(R.id.rowItemCapabilities);
-        capabilitiesItem.setText(Util.getCapabilitiesShortString(itemData.capabilities));
+        capabilitiesItem.setText(Util.getCapabilitiesString(itemData.capabilities));
 
         // bssid (mac)
         TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);

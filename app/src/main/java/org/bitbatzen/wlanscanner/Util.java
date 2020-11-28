@@ -21,6 +21,7 @@ package org.bitbatzen.wlanscanner;
 
 import android.net.wifi.ScanResult;
 import android.graphics.Color;
+import android.util.Log;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -140,7 +141,7 @@ public class Util {
 			return FrequencyBand.FIVE_GHZ;
 		}
 		else {
-			System.out.print("Util.getFrequencyBand() -- Unkown Frequency: " + frequency);
+			Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
 			return FrequencyBand.UNKOWN;
 		}
 	}
@@ -188,34 +189,39 @@ public class Util {
 			case ScanResult.CHANNEL_WIDTH_160MHZ:
 				return 160;
 			default:
-				System.out.print("Util.getChannelWidth() -- Unkown Channel Width ID: " + sr.channelWidth);
+				Log.w("", "Util.getChannelWidth() -- Unknown Channel Width ID: " + sr.channelWidth);
 				return 20;
 		}
 	}
-	
-	public static String getCapabilitiesShortString(String capabilities) {
-		String shortString = "";
 
-		if (capabilities.contains("WEP")) {
-			shortString += "[WEP]";
+	public static String getWLANStandard(ScanResult sr) {
+		if (android.os.Build.VERSION.SDK_INT < 30) {
+			return "";
 		}
-		if (capabilities.contains("WPA-")) {
-			shortString += "[WPA]";
+
+		int wlanStandard = sr.getWifiStandard();
+
+		switch (wlanStandard) {
+			case ScanResult.WIFI_STANDARD_LEGACY:
+				return "a/b/g";
+			case ScanResult.WIFI_STANDARD_11N:
+				return "n";
+			case ScanResult.WIFI_STANDARD_11AC:
+				return "ac";
+			case ScanResult.WIFI_STANDARD_11AX:
+				return "ax";
+			default:
+				Log.w("", "Util.getWLANStandard() -- Unknown WLAN Standard ID: " + wlanStandard);
+				return "";
 		}
-		if (capabilities.contains("WPA2")) {
-			shortString += "[WPA2]";
-		}
-		if (capabilities.contains("WPA3")) {
-			shortString += "[WPA3]";
-		}
-		if (capabilities.contains("WPS")) {
-			shortString += "[WPS]";
-		}
-//		if (capabilities.contains("ESS")) {
-//			shortString += "[ESS]";
-//		}
-		
-		return shortString;
+	}
+	
+	public static String getCapabilitiesString(String capabilities) {
+		String s = capabilities.replace("][", " ")
+				.replace("]", "")
+				.replace("[", "");
+
+		return s;
 	}
 	
     public static int getRandomColor(int min, int max) {

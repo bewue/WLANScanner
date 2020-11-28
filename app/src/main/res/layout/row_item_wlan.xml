@@ -4,14 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-<TextView
-    android:id="@+id/rowItemSSID"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textColor="@color/wlanscanner_list_ssid"
-    android:textStyle="bold"
-    android:text="TextView"
-    android:textSize="18sp" />
+    <TextView
+        android:id="@+id/rowItemSSID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/wlanscanner_list_ssid"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/rowItemLevel"
@@ -21,7 +20,6 @@
         android:layout_alignBottom="@+id/rowItemBSSID"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:text="TextView"
         android:textColor="@color/wlanscanner_list_item_color2"
         android:textSize="16sp" />
 
@@ -36,7 +34,6 @@
         android:paddingTop="0sp"
         android:paddingRight="2sp"
         android:paddingBottom="0sp"
-        android:text="TextView"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="12sp" />
 
@@ -46,7 +43,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/rowItemChannel"
         android:layout_alignBottom="@+id/rowItemLevel"
-        android:text="TextView"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="11sp" />
 
@@ -58,7 +54,17 @@
         android:layout_alignParentRight="false"
         android:layout_toRightOf="@id/rowItemSSID"
         android:padding="5sp"
-        android:text="TextView"
+        android:textColor="@color/wlanscanner_list_item_color1"
+        android:textSize="11sp" />
+
+    <TextView
+        android:id="@+id/rowItemWLANStandard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentRight="false"
+        android:layout_toRightOf="@id/rowItemFrequencyBand"
+        android:paddingTop="5sp"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="11sp" />
 
@@ -69,7 +75,6 @@
         android:layout_below="@+id/rowItemSSID"
         android:layout_alignParentLeft="true"
         android:maxLines="1"
-        android:text="TextView"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="12sp" />
 
@@ -79,7 +84,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rowItemCapabilities"
         android:layout_alignParentLeft="true"
-        android:text="TextView"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="12sp" />
 

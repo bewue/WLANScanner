@@ -254,7 +254,6 @@ public class MainActivity extends Activity implements IEventListener {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		System.out.print("onOptionsItemSelected");
 	    switch (item.getItemId()) {
 	        case R.id.actionbutton_toggle_scan:
 				setScanEnabled(! scanEnabled);

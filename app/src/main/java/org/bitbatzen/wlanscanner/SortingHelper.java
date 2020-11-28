@@ -32,6 +32,7 @@ public class SortingHelper {
 	public static final int SORTING_OPTION_CHANNEL			= 1;
 	public static final int SORTING_OPTION_CHANNEL_WIDTH 	= 2;
 	public static final int SORTING_OPTION_SSID 			= 3;
+	public static final int SORTING_OPTION_WLAN_STANDARD    = 4;
 
     private HashMap<Integer, String> sortingOptions;
 
@@ -42,6 +43,7 @@ public class SortingHelper {
         sortingOptions.put(SORTING_OPTION_CHANNEL, "Order by Channel");
 		sortingOptions.put(SORTING_OPTION_CHANNEL_WIDTH, "Order by Channel Width");
         sortingOptions.put(SORTING_OPTION_SSID, "Order by SSID");
+		sortingOptions.put(SORTING_OPTION_WLAN_STANDARD, "Order by WLAN Standard");
     }
     
     public String getSortingOptionName(int sortingOption) {
@@ -94,6 +96,9 @@ public class SortingHelper {
 
 			case SORTING_OPTION_SSID:
 				return (v1.SSID.compareToIgnoreCase(v2.SSID) > 0);
+
+			case SORTING_OPTION_WLAN_STANDARD:
+				return (v1.getWifiStandard() > v2.getWifiStandard());
 
 			default:
 				return false;
