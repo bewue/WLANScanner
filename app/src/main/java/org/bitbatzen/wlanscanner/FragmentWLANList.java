@@ -65,6 +65,7 @@ public class FragmentWLANList
         super.onAttach(activity);
     	mainActivity = (MainActivity) activity;
     	EventManager.sharedInstance().addListener(this, EventID.SCAN_RESULT_CHANGED);
+		EventManager.sharedInstance().addListener(this, EventID.USER_QUIT);
     }
 
     @Override
@@ -154,6 +155,11 @@ public class FragmentWLANList
 		case SCAN_RESULT_CHANGED:
 			scanResultChanged();
 			break;
+
+		case USER_QUIT:
+			currentSortingOption = SortingHelper.SORTING_OPTION_LEVEL;
+			break;
+
 		default:
 			break;
 		}

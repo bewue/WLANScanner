@@ -5,7 +5,7 @@
     android:layout_height="match_parent" >
 
 	<ImageView
-		android:id="@+id/iv_scanresults_indicator"
+		android:id="@+id/refresh_indicator"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"
@@ -16,7 +16,7 @@
 		android:layout_marginEnd="15dp"
 		android:layout_marginRight="15dp"
 		android:layout_marginBottom="15dp"
-		android:src="@drawable/ic_refresh_indicator" />
+		android:src="@drawable/ic_refresh" />
 	
 </RelativeLayout>
 	

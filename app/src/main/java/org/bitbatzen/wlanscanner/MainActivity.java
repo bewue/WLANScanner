@@ -77,9 +77,11 @@ public class MainActivity extends Activity implements IEventListener {
 	private int currentFragmentID;
 	
 	private MenuItem buttonToggleScan;
+	private ImageView ivPauseButton;
+	private Animation animPauseButton;
 
-	private ImageView ivScanResultIndicator;
-	private Animation animScanResultIndicator;
+	private ImageView ivRefreshIndicator;
+	private Animation animRefreshIndicator;
 	
 	private WifiManager wm;       
 	
@@ -88,8 +90,7 @@ public class MainActivity extends Activity implements IEventListener {
 	private BroadcastReceiver brScanResults;
 	
     private boolean wlanEnabledByApp;
-    private boolean autoRefreshEnabled;
-    
+
     private boolean scanEnabled;
     
     private SharedPreferences sharedPrefs;
@@ -110,17 +111,17 @@ public class MainActivity extends Activity implements IEventListener {
         
         setContentView(R.layout.activity_main);
         
-        FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
-        View.inflate(this, R.layout.scanresults_indicator_image, rootLayout);
-        ivScanResultIndicator = (ImageView) findViewById(R.id.iv_scanresults_indicator);
-        ivScanResultIndicator.setVisibility(View.INVISIBLE);
+        FrameLayout rootLayout = (FrameLayout) findViewById(android.R.id.content);
+        View.inflate(this, R.layout.refresh_indicator, rootLayout);
+        ivRefreshIndicator = (ImageView) findViewById(R.id.refresh_indicator);
+        ivRefreshIndicator.setVisibility(View.INVISIBLE);
         
-        animScanResultIndicator = AnimationUtils.loadAnimation(this, R.anim.scanresult_indicator_blinking);
-        
+        animRefreshIndicator = AnimationUtils.loadAnimation(this, R.anim.anim_refresh_indicator);
+
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayUseLogoEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayUseLogoEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         
     	fragmentWLANList 		= new FragmentWLANList();
@@ -141,7 +142,21 @@ public class MainActivity extends Activity implements IEventListener {
         tab3.setIcon(R.drawable.ic_tab_diagram);
         tab3.setTabListener(new MyTabListener(this, fragmentDiagram5GHz));
         actionBar.addTab(tab3, 2, currentFragmentID == 2);
-        
+
+		ivPauseButton = new ImageView(MainActivity.this);
+		ivPauseButton.setImageResource(R.drawable.ic_pause);
+		ivPauseButton.setClickable(true);
+		ivPauseButton.setFocusable(true);
+		ivPauseButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setScanEnabled(false);
+				invalidateOptionsMenu();
+			}
+		});
+
+		animPauseButton = AnimationUtils.loadAnimation(this, R.anim.anim_pause_button);
+
         wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         
         scanResultList = new ArrayList<ScanResult>();
@@ -214,18 +229,23 @@ public class MainActivity extends Activity implements IEventListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.actionbar_buttons, menu);
-	    
+
 	    buttonToggleScan = menu.findItem(R.id.actionbutton_toggle_scan);
-	    
+
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (scanEnabled) {
-			buttonToggleScan.setIcon(R.drawable.ic_pause);
+			if (ivPauseButton.getAnimation() == null) {
+				ivPauseButton.startAnimation(animPauseButton);
+			}
+			buttonToggleScan.setActionView(ivPauseButton);
 		}
 		else {
+			ivPauseButton.clearAnimation();
+			buttonToggleScan.setActionView(null);
 			buttonToggleScan.setIcon(R.drawable.ic_play);
 		}
 
@@ -234,6 +254,7 @@ public class MainActivity extends Activity implements IEventListener {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		System.out.print("onOptionsItemSelected");
 	    switch (item.getItemId()) {
 	        case R.id.actionbutton_toggle_scan:
 				setScanEnabled(! scanEnabled);
@@ -260,8 +281,8 @@ public class MainActivity extends Activity implements IEventListener {
 
     		if (android.os.Build.VERSION.SDK_INT >= 17) {
 				long age = ((SystemClock.elapsedRealtime() * 1000) - sr.timestamp) / 1000000;
-				// if the wlan was last seen more than 10 seconds ago, do not add it to the list
-				addScanResult = (age < 10);
+				// if the wlan was last seen more than 30 seconds ago, do not add it to the list
+				addScanResult = (age < 30);
     		}
 
     		if (addScanResult) {
@@ -271,11 +292,11 @@ public class MainActivity extends Activity implements IEventListener {
 
 		startScan();
 
-    	Animation anim = ivScanResultIndicator.getAnimation();
+    	Animation anim = ivRefreshIndicator.getAnimation();
     	if (anim == null || (anim != null && anim.hasEnded())) {
-	    	ivScanResultIndicator.setVisibility(View.VISIBLE);
-	    	ivScanResultIndicator.startAnimation(animScanResultIndicator);
-	    	ivScanResultIndicator.setVisibility(View.GONE);
+	    	ivRefreshIndicator.setVisibility(View.VISIBLE);
+	    	ivRefreshIndicator.startAnimation(animRefreshIndicator);
+	    	ivRefreshIndicator.setVisibility(View.GONE);
     	}
     	
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
