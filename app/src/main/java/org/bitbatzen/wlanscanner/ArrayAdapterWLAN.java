@@ -122,14 +122,14 @@ class ArrayAdapterWLAN extends BaseAdapter {
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
         int channel = Util.getChannelFromFrequency(itemData.frequency);
         channelItem.setText(Integer.toString(channel));
-        float cOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 165, parent.getResources().getDisplayMetrics());
+        float cOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 170, parent.getResources().getDisplayMetrics());
         channelItem.setX(parent.getWidth() - cOffset);
 
         // channel width
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             TextView channelWidthItem = (TextView) view.findViewById(R.id.rowItemChannelWidth);
             channelWidthItem.setText(Util.getChannelWidth(itemData) + " MHz");
-            float cwOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 130, parent.getResources().getDisplayMetrics());
+            float cwOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, parent.getResources().getDisplayMetrics());
             channelWidthItem.setX(parent.getWidth() - cwOffset);
         }
 

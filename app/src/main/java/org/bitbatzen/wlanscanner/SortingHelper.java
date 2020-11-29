@@ -39,11 +39,11 @@ public class SortingHelper {
     
     public SortingHelper() {
     	sortingOptions = new HashMap<Integer, String>();
-        sortingOptions.put(SORTING_OPTION_LEVEL, "Order by Level");
-        sortingOptions.put(SORTING_OPTION_CHANNEL, "Order by Channel");
-		sortingOptions.put(SORTING_OPTION_CHANNEL_WIDTH, "Order by Channel Width");
-        sortingOptions.put(SORTING_OPTION_SSID, "Order by SSID");
-		sortingOptions.put(SORTING_OPTION_WLAN_STANDARD, "Order by WLAN Standard");
+        sortingOptions.put(SORTING_OPTION_LEVEL, "Level");
+        sortingOptions.put(SORTING_OPTION_CHANNEL, "Channel");
+		sortingOptions.put(SORTING_OPTION_CHANNEL_WIDTH, "Channel Width");
+        sortingOptions.put(SORTING_OPTION_SSID, "SSID");
+		sortingOptions.put(SORTING_OPTION_WLAN_STANDARD, "WLAN Standard");
     }
     
     public String getSortingOptionName(int sortingOption) {

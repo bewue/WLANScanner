@@ -229,7 +229,7 @@ public class MainActivity extends Activity implements IEventListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.actionbar_buttons, menu);
-
+		
 	    buttonToggleScan = menu.findItem(R.id.actionbutton_toggle_scan);
 
 	    return super.onCreateOptionsMenu(menu);

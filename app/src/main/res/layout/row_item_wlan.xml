@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingRight="5dp">
 
     <TextView
         android:id="@+id/rowItemSSID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/wlanscanner_list_ssid"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
@@ -19,13 +20,12 @@
         android:layout_alignBaseline="@+id/rowItemBSSID"
         android:layout_alignBottom="@+id/rowItemBSSID"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="2dp"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:textColor="@color/wlanscanner_diagram_bg"
-        android:textSize="16sp" />
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/rowItemChannel"
