@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@color/wlanscanner_dialog_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_dialog_filter_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="Filter"
+        android:textColor="@color/wlanscanner_dialog_header"
+        android:textSize="20sp"
+        android:textStyle="bold"></TextView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_dialog_filter_ssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="130dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="18dp"
+            android:text="SSID (contains):"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_dialog_filter_ssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_dialog_filter_ssid"
+            android:width="145dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textColorHint="@color/wlanscanner_list_item_color1" />
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_ssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/et_dialog_filter_ssid"
+            android:paddingTop="22dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_dialog_filter_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="130dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="18dp"
+            android:text="Channel:"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_dialog_filter_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_dialog_filter_channel"
+            android:width="145dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:numeric="integer"
+            android:textColor="@color/wlanscanner_dialog_text" />
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_channel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/et_dialog_filter_channel"
+            android:paddingTop="22dp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_dialog_filter_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/wlanscanner_error_text"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/wlanscanner_dialog_bg"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_dialog_filter_ok"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="8dp"
+            android:background="@drawable/buttonselector"
+            android:clickable="true"
+            android:text="Ok"
+            android:textColor="@color/wlanscanner_button_text"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

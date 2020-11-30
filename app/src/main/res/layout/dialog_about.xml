@@ -39,13 +39,14 @@
         android:text="@string/www"
         android:textColor="@color/wlanscanner_dialog_text"
         android:textSize="14sp" />
-    
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/wlanscanner_dialog_bg"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <Button
             android:id="@+id/button_dialog_close"
@@ -54,7 +55,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/buttonselector"
             android:clickable="true"
-            android:text="Close"
+            android:text="CLOSE"
             android:textColor="@color/wlanscanner_button_text"
             android:textStyle="bold" />
     </LinearLayout>

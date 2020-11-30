@@ -45,7 +45,6 @@ public class FragmentDiagram5GHz
         super.onAttach(activity);
     	mainActivity = (MainActivity) activity;
     	EventManager.sharedInstance().addListener(this, EventID.SCAN_RESULT_CHANGED);
-    	EventManager.sharedInstance().addListener(this, EventID.OPTION_CHANNEL_WIDTH_CHANGED);
     }
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

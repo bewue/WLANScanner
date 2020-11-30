@@ -11,11 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="8dp"
-        android:text="EXIT ?"
+        android:text="Exit ?"
         android:textColor="@color/wlanscanner_dialog_header"
         android:textSize="20sp"
-        android:textStyle="bold" >
-    </TextView>
+        android:textStyle="bold"></TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"

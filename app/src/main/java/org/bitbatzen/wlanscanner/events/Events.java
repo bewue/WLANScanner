@@ -23,8 +23,7 @@ public class Events {
 	
 	public enum EventID {
 		SCAN_RESULT_CHANGED,
-		OPTION_CHANNEL_WIDTH_CHANGED,
+		FILTER_CHANGED,
 		USER_QUIT
 	}
-
 }

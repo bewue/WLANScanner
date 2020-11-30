@@ -85,7 +85,7 @@ public class LevelDiagram5GHz extends LevelDiagram {
 			float levelY = innerRect.bottom - levelHeight;
 			float posX = getXAxisPos(wdi.frequency);
 			
-			int channel = Util.getChannelFromFrequency(wdi.frequency);
+			int channel = Util.getChannel(wdi.frequency);
 			ssidPaint.setColor(wdi.color);
 			canvas.drawText(wdi.SSID + " (CH " + channel + ")", posX, levelY - 8, ssidPaint);			
 		}

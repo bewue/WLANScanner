@@ -12,4 +12,9 @@
     <string name="sharedPrefs_wlanEnabledByApp">sharedPrefs_wlanEnabledByApp</string>
     <string name="sharedPrefs_selectedTab">sharedPrefs_selectedTab</string>
 
+    <string name="sharedPrefs_filterSSIDEnabled">sharedPrefs_filterSSIDEnabled</string>
+    <string name="sharedPrefs_filterSSID">sharedPrefs_filterSSID</string>
+    <string name="sharedPrefs_filterChannelEnabled">sharedPrefs_filterChannelEnabled</string>
+    <string name="sharedPrefs_filterChannel">sharedPrefs_filterChannel</string>
+
 </resources>

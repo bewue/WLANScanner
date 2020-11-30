@@ -41,11 +41,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
+import org.bitbatzen.wlanscanner.dialogs.DialogFilter;
 import org.bitbatzen.wlanscanner.dialogs.DialogPermissions;
 import org.bitbatzen.wlanscanner.dialogs.DialogQuit;
 import org.bitbatzen.wlanscanner.events.EventManager;
@@ -82,10 +85,13 @@ public class MainActivity extends Activity implements IEventListener {
 
 	private ImageView ivRefreshIndicator;
 	private Animation animRefreshIndicator;
+
+	private MenuItem buttonFilter;
 	
 	private WifiManager wm;       
 	
-	private ArrayList<ScanResult> scanResultList;
+	private ArrayList<ScanResult> scanResultListOrig;
+	private ArrayList<ScanResult> scanResultListFiltered;
 	
 	private BroadcastReceiver brScanResults;
 	
@@ -101,6 +107,7 @@ public class MainActivity extends Activity implements IEventListener {
         super.onCreate(savedInstanceState);
 
         EventManager.sharedInstance().addListener(this, EventID.USER_QUIT);
+		EventManager.sharedInstance().addListener(this, EventID.FILTER_CHANGED);
         
         sharedPrefs = getPreferences(Context.MODE_PRIVATE);
         scanEnabled = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_scanEnabled), true);
@@ -158,8 +165,9 @@ public class MainActivity extends Activity implements IEventListener {
 		animPauseButton = AnimationUtils.loadAnimation(this, R.anim.anim_pause_button);
 
         wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        
-        scanResultList = new ArrayList<ScanResult>();
+
+        scanResultListOrig 		= new ArrayList<>();
+		scanResultListFiltered 	= new ArrayList<>();
         
         brScanResults = new BroadcastReceiver() {
             @Override
@@ -230,7 +238,9 @@ public class MainActivity extends Activity implements IEventListener {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.actionbar_buttons, menu);
 		
-	    buttonToggleScan = menu.findItem(R.id.actionbutton_toggle_scan);
+	    buttonToggleScan 	= menu.findItem(R.id.actionbutton_toggle_scan);
+		buttonFilter 		= menu.findItem(R.id.actionbutton_filter);
+		updateFilterButton();
 
 	    return super.onCreateOptionsMenu(menu);
 	}
@@ -259,6 +269,9 @@ public class MainActivity extends Activity implements IEventListener {
 				setScanEnabled(! scanEnabled);
 	        	invalidateOptionsMenu();
 	            return true;
+			case R.id.actionbutton_filter:
+				new DialogFilter(this).show();
+				return true;
 	        case R.id.actionbutton_about:
 	        	new DialogAbout(this).show();
 	        	return true;
@@ -273,19 +286,23 @@ public class MainActivity extends Activity implements IEventListener {
     	}
 
     	List<ScanResult> scanResults = wm.getScanResults();
-    	scanResultList.clear();
+		scanResultListOrig.clear();
+    	scanResultListFiltered.clear();
 
     	for (ScanResult sr : scanResults) {
-    		boolean addScanResult = true;
 
     		if (android.os.Build.VERSION.SDK_INT >= 17) {
 				long age = ((SystemClock.elapsedRealtime() * 1000) - sr.timestamp) / 1000000;
 				// if the wlan was last seen more than 30 seconds ago, do not add it to the list
-				addScanResult = (age < 30);
+				if (age > 30) {
+					continue;
+				}
     		}
 
-    		if (addScanResult) {
-				scanResultList.add(sr);
+    		scanResultListOrig.add(sr);
+
+			if (checkFilter(sr)) {
+				scanResultListFiltered.add(sr);
 			}
     	}
 
@@ -300,6 +317,59 @@ public class MainActivity extends Activity implements IEventListener {
     	
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
     	invalidateOptionsMenu();
+	}
+
+	private boolean checkFilter(ScanResult sr) {
+		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
+		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterSSIDEnabled), false);
+		String filterSSID 				= sharedPrefs.getString(getString(R.string.sharedPrefs_filterSSID), "");
+		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterChannelEnabled), false);
+		String filterChannel			= sharedPrefs.getString(getString(R.string.sharedPrefs_filterChannel), "");
+
+		if (filterSSIDEnabled && ! sr.SSID.contains(filterSSID)) {
+			return false;
+		}
+
+		if (filterChannelEnabled) {
+			int fChannel = Integer.parseInt(filterChannel);
+			if (android.os.Build.VERSION.SDK_INT >= 23 && sr.channelWidth == ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ) {
+				if (Util.getChannel(sr.centerFreq0) != fChannel && Util.getChannel(sr.centerFreq1) != fChannel) {
+					return false;
+				}
+			}
+			else if (Util.getChannel(sr.frequency) != fChannel) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	private void onFilterChanged() {
+		ArrayList<ScanResult> mList = new ArrayList<>();
+
+		for (ScanResult sr : scanResultListOrig) {
+			if (checkFilter(sr)) {
+				mList.add(sr);
+			}
+		}
+
+		scanResultListFiltered = mList;
+		updateFilterButton();
+		EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
+	}
+
+	private void updateFilterButton() {
+		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
+		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterSSIDEnabled), false);
+		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterChannelEnabled), false);
+
+		if (filterSSIDEnabled || filterChannelEnabled) {
+			buttonFilter.setIcon(R.drawable.ic_filter_active);
+		}
+		else {
+			buttonFilter.setIcon(R.drawable.ic_filter);
+		}
 	}
 	
 	private void setWLANEnabled(boolean enable) {
@@ -316,7 +386,7 @@ public class MainActivity extends Activity implements IEventListener {
 	}
 	
     public ArrayList<ScanResult> getScanResults() {
-    	return scanResultList;
+    	return scanResultListFiltered;
     }
     
 	public void showToast(String text) {
@@ -358,6 +428,10 @@ public class MainActivity extends Activity implements IEventListener {
         	scanEnabled 		= true;
 
 			finish();
+			break;
+
+		case FILTER_CHANGED:
+			onFilterChanged();
 			break;
 
 		default:

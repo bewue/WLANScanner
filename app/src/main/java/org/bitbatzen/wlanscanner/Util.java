@@ -146,7 +146,7 @@ public class Util {
 		}
 	}
 	
-	public static int getFrequencyFromChannel(int channel) {
+	public static int getFrequency(int channel) {
         for (Entry<Integer, Integer> entry : CHANNELS_24GHZ_BAND.entrySet()) {
             if (entry.getValue() == channel) {
             	return entry.getKey();
@@ -161,7 +161,7 @@ public class Util {
 		return -1;
 	}
 
-	public static int getChannelFromFrequency(int frequency) {
+	public static int getChannel(int frequency) {
 		if (CHANNELS_24GHZ_BAND.containsKey(frequency)) {
 			return CHANNELS_24GHZ_BAND.get(frequency);
 		}
