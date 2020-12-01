@@ -3,6 +3,7 @@
 
     <string name="app_name">WLANScanner</string>
     <string name="www">https://github.com/bewue/WLANScanner</string>
+    <string name="dev_email">bitbatzen@gmail.com</string>
     
     <string name="dialog_wlanlistiteminfo_header_capabilities"><u>Capabilities</u></string>
     <string name="dialog_wlanlistiteminfo_header_frequency"><u>Frequency</u></string>

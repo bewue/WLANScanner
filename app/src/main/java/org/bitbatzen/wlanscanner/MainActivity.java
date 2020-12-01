@@ -326,7 +326,7 @@ public class MainActivity extends Activity implements IEventListener {
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterChannelEnabled), false);
 		String filterChannel			= sharedPrefs.getString(getString(R.string.sharedPrefs_filterChannel), "");
 
-		if (filterSSIDEnabled && ! sr.SSID.contains(filterSSID)) {
+		if (filterSSIDEnabled && ! sr.SSID.toLowerCase().contains(filterSSID.toLowerCase())) {
 			return false;
 		}
 

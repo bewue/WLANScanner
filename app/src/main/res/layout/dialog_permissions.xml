@@ -2,26 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/wlanscanner_dialog_bg"
-    android:orientation="vertical" >
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_dialog_permission_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
         android:text="The app requires all requested permissions to work properly!"
         android:textColor="@color/wlanscanner_dialog_header"
-        android:textSize="20sp"
-        android:textStyle="bold"></TextView>
+        android:textSize="18sp"></TextView>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/wlanscanner_dialog_bg"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_dialog_ok"

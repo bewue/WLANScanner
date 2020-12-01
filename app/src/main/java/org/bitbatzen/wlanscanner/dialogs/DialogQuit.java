@@ -19,16 +19,18 @@
 
 package org.bitbatzen.wlanscanner.dialogs;
 
-import org.bitbatzen.wlanscanner.R;
-import org.bitbatzen.wlanscanner.events.EventManager;
-import org.bitbatzen.wlanscanner.events.Events.EventID;
-
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+
+import org.bitbatzen.wlanscanner.R;
+import org.bitbatzen.wlanscanner.events.EventManager;
+import org.bitbatzen.wlanscanner.events.Events.EventID;
 
 
 public class DialogQuit 
@@ -51,6 +53,7 @@ public class DialogQuit
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_quit);
+		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		
 		buttonYes = (Button) findViewById(R.id.button_dialog_yes);
 		buttonYes.setOnClickListener(this);

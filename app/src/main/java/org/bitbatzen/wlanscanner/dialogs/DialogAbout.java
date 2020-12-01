@@ -21,13 +21,15 @@ package org.bitbatzen.wlanscanner.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.bitbatzen.wlanscanner.BuildConfig;
 import org.bitbatzen.wlanscanner.R;
 
 
@@ -47,19 +49,19 @@ public class DialogAbout
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_about);
+		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		
 		buttonClose = (Button) findViewById(R.id.button_dialog_close);
 		buttonClose.setOnClickListener(this);
 
-		try {
-			String versionName = "v" + activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionName;
-			TextView tvVersion = (TextView) findViewById(R.id.tv_dialog_about_version);
-			tvVersion.setText(versionName);
-		}
-		catch (NameNotFoundException e) {}
+		TextView tvVersion = (TextView) findViewById(R.id.tv_dialog_about_version);
+		tvVersion.setText("Version: " + BuildConfig.VERSION_NAME);
+
+		TextView tvAppID = (TextView) findViewById(R.id.tv_dialog_about_app_id);
+		tvAppID.setText("App-ID: " + BuildConfig.APPLICATION_ID);
 	}
 
 	@Override

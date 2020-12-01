@@ -21,6 +21,8 @@ package org.bitbatzen.wlanscanner.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -54,6 +56,7 @@ public class DialogPermissions
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_permissions);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         buttonOk = (Button) findViewById(R.id.button_dialog_ok);
         buttonOk.setOnClickListener(this);

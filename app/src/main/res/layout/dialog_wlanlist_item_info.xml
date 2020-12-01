@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:background="@color/wlanscanner_dialog_bg"
-    android:orientation="vertical" >
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_dialog_wlanlist_item_info_header"
@@ -14,38 +14,37 @@
         android:text="Additional Info"
         android:textColor="@color/wlanscanner_dialog_header"
         android:textSize="20sp"
-        android:textStyle="bold" >
-    </TextView>
-    
-  	<TextView
+        android:textStyle="bold"></TextView>
+
+    <TextView
         android:id="@+id/tv_dialog_wlanlist_item_info_capabilities_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:text="@string/dialog_wlanlistiteminfo_header_capabilities"
         android:textColor="@color/wlanscanner_dialog_text"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="@string/dialog_wlanlistiteminfo_header_capabilities" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_dialog_wlanlist_item_info_capabilities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:text="TextView"
         android:textColor="@color/wlanscanner_dialog_text"
-        android:textSize="18sp"
-        android:text="TextView" />
-    
+        android:textSize="18sp" />
+
     <TextView
         android:id="@+id/tv_dialog_wlanlist_item_info_frequency_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/dialog_wlanlistiteminfo_header_frequency"
         android:textColor="@color/wlanscanner_dialog_text"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="@string/dialog_wlanlistiteminfo_header_frequency" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_dialog_wlanlist_item_info_frequency"
@@ -53,16 +52,16 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="12dp"
+        android:text="TextView"
         android:textColor="@color/wlanscanner_dialog_text"
-        android:textSize="18sp"
-        android:text="TextView" />
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@color/wlanscanner_dialog_bg"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button_dialog_close"

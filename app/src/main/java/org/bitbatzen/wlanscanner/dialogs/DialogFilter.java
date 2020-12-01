@@ -23,6 +23,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -64,6 +66,7 @@ public class DialogFilter
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.dialog_filter);
+		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		
 		buttonOk = (Button) findViewById(R.id.button_dialog_filter_ok);
 		buttonOk.setOnClickListener(this);
@@ -94,12 +97,10 @@ public class DialogFilter
 	}
 
 	public void onClickOk() {
+		SharedPreferences.Editor editor = activity.getPreferences(Context.MODE_PRIVATE).edit();
+
 		boolean filterSSIDEnabled		= cbFilterSSIDEnabled.isChecked();
 		String filterSSID 				= etFilterSSID.getText().toString();
-		boolean filterChannelEnabled	= cbFilterChannelEnabled.isChecked();
-		int filterChannel				= 1;
-
-		SharedPreferences.Editor editor = activity.getPreferences(Context.MODE_PRIVATE).edit();
 
 		// validate ssid filter
 		if (filterSSIDEnabled && filterSSID.equals("")) {
@@ -111,16 +112,20 @@ public class DialogFilter
 		editor.putBoolean(activity.getString(R.string.sharedPrefs_filterSSIDEnabled), filterSSIDEnabled);
 		editor.putString(activity.getString(R.string.sharedPrefs_filterSSID), filterSSID);
 
+		boolean filterChannelEnabled	= cbFilterChannelEnabled.isChecked();
+		String filterChannel			= etFilterChannel.getText().toString();
+
 		// validate channel filter
 		if (filterChannelEnabled) {
+			int fChannel = -1;
 			try {
-				filterChannel = Integer.parseInt(etFilterChannel.getText().toString());
+				fChannel = Integer.parseInt(filterChannel);
 			} catch (Exception e) {
 				etFilterInfo.setText("Invalid channel filter!");
 				return;
 			}
 
-			if (Util.getFrequency(filterChannel) == -1) {
+			if (Util.getFrequency(fChannel) == -1) {
 				etFilterInfo.setText("Invalid channel filter!");
 				return;
 			}
@@ -128,7 +133,7 @@ public class DialogFilter
 
 		// save channel filter
 		editor.putBoolean(activity.getString(R.string.sharedPrefs_filterChannelEnabled), filterChannelEnabled);
-		editor.putString(activity.getString(R.string.sharedPrefs_filterChannel), String.valueOf(filterChannel));
+		editor.putString(activity.getString(R.string.sharedPrefs_filterChannel), filterChannel);
 
 		editor.commit();
 
