@@ -85,7 +85,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/buttonselector"
             android:clickable="true"
-            android:text="CLOSE"
+            android:text="Close"
             android:textColor="@color/wlanscanner_button_text"
             android:textStyle="bold" />
     </LinearLayout>
