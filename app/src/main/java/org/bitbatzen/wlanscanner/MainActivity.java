@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements IEventListener {
 	private Fragment fragmentDiagram24GHz;
 	private Fragment fragmentDiagram5GHz;
 	private int currentFragmentID;
-	
+
 	private MenuItem buttonToggleScan;
 	private ImageView ivPauseButton;
 	private Animation animPauseButton;
@@ -92,22 +92,22 @@ public class MainActivity extends Activity implements IEventListener {
 	private Animation animRefreshIndicator;
 
 	private MenuItem buttonFilter;
-	
-	private WifiManager wm;       
-	
+
+	private WifiManager wm;
+
 	private ArrayList<ScanResult> scanResultListOrig;
 	private ArrayList<ScanResult> scanResultListFiltered;
-	
+
 	private BroadcastReceiver brScanResults;
-	
+
     private boolean wlanEnabledByApp;
 
     private boolean scanEnabled;
     private boolean scanTimerIsRunning		= false;
 	private long lastScanResultReceivedTime = 0;
-    
+
     private SharedPreferences sharedPrefs;
-    
+
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,21 +115,21 @@ public class MainActivity extends Activity implements IEventListener {
 
         EventManager.sharedInstance().addListener(this, EventID.USER_QUIT);
 		EventManager.sharedInstance().addListener(this, EventID.FILTER_CHANGED);
-        
-        sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-        scanEnabled = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_scanEnabled), true);
-        wlanEnabledByApp = sharedPrefs.getBoolean(getString(R.string.sharedPrefs_wlanEnabledByApp), false);
-        currentFragmentID = sharedPrefs.getInt(getString(R.string.sharedPrefs_selectedTab), FRAGMENT_ID_WLANLIST);
-        
+
+        sharedPrefs         = getPreferences(Context.MODE_PRIVATE);
+        scanEnabled         = sharedPrefs.getBoolean(Util.PREF_SCAN_ENABLED, true);
+        wlanEnabledByApp    = sharedPrefs.getBoolean(Util.PREF_WLAN_ENABLED_BY_APP, false);
+        currentFragmentID   = sharedPrefs.getInt(Util.PREF_SELECTED_TAB, FRAGMENT_ID_WLANLIST);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
+
         setContentView(R.layout.activity_main);
-        
+
         FrameLayout rootLayout = (FrameLayout) findViewById(android.R.id.content);
         View.inflate(this, R.layout.refresh_indicator, rootLayout);
         ivRefreshIndicator = (ImageView) findViewById(R.id.refresh_indicator);
         ivRefreshIndicator.setVisibility(View.INVISIBLE);
-        
+
         animRefreshIndicator = AnimationUtils.loadAnimation(this, R.anim.anim_refresh_indicator);
 
         ActionBar actionBar = getActionBar();
@@ -137,21 +137,21 @@ public class MainActivity extends Activity implements IEventListener {
 		actionBar.setDisplayUseLogoEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        
+
     	fragmentWLANList 		= new FragmentWLANList();
     	fragmentDiagram24GHz 	= new FragmentDiagram24GHz();
     	fragmentDiagram5GHz 	= new FragmentDiagram5GHz();
-        
+
         tab1 = actionBar.newTab().setText("List");
         tab1.setIcon(R.drawable.ic_tab_list);
         tab1.setTabListener(new MyTabListener(this, fragmentWLANList));
         actionBar.addTab(tab1, 0, currentFragmentID == 0);
-        
+
         tab2 = actionBar.newTab().setText("2.4 GHz");
         tab2.setIcon(R.drawable.ic_tab_diagram);
         tab2.setTabListener(new MyTabListener(this, fragmentDiagram24GHz));
         actionBar.addTab(tab2, 1, currentFragmentID == 1);
-        
+
         tab3 = actionBar.newTab().setText("5 GHz");
         tab3.setIcon(R.drawable.ic_tab_diagram);
         tab3.setTabListener(new MyTabListener(this, fragmentDiagram5GHz));
@@ -175,7 +175,7 @@ public class MainActivity extends Activity implements IEventListener {
 
         scanResultListOrig 		= new ArrayList<>();
 		scanResultListFiltered 	= new ArrayList<>();
-        
+
         brScanResults = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent intent) {
@@ -216,42 +216,42 @@ public class MainActivity extends Activity implements IEventListener {
     @Override
     protected void onPause() {
     	super.onPause();
-    	
+
     	SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
-        editor.putBoolean(getString(R.string.sharedPrefs_scanEnabled), scanEnabled);
-        editor.putBoolean(getString(R.string.sharedPrefs_wlanEnabledByApp), wlanEnabledByApp);
-        editor.putInt(getString(R.string.sharedPrefs_selectedTab), currentFragmentID);
+        editor.putBoolean(Util.PREF_SCAN_ENABLED, scanEnabled);
+        editor.putBoolean(Util.PREF_WLAN_ENABLED_BY_APP, wlanEnabledByApp);
+        editor.putInt(Util.PREF_SELECTED_TAB, currentFragmentID);
         editor.commit();
     }
-    
+
     @Override
     protected void onResume() {
     	super.onResume();
     }
-    
+
     @Override
     protected void onDestroy() {
     	super.onDestroy();
     	unregisterReceiver(brScanResults);
     }
-    
+
 	@Override
     public void onBackPressed() {
 		new DialogQuit(this).show();
     }
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.actionbar_buttons, menu);
-		
+
 	    buttonToggleScan 	= menu.findItem(R.id.actionbutton_toggle_scan);
 		buttonFilter 		= menu.findItem(R.id.actionbutton_filter);
 		updateFilterButton();
 
 	    return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (scanEnabled) {
@@ -268,7 +268,7 @@ public class MainActivity extends Activity implements IEventListener {
 
 	    return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
@@ -289,7 +289,7 @@ public class MainActivity extends Activity implements IEventListener {
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
-	
+
 	private void onReceivedScanResults() {
     	if (! scanEnabled) {
     		return;
@@ -322,7 +322,7 @@ public class MainActivity extends Activity implements IEventListener {
 	    	ivRefreshIndicator.startAnimation(animRefreshIndicator);
 	    	ivRefreshIndicator.setVisibility(View.GONE);
     	}
-    	
+
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
     	invalidateOptionsMenu();
 
@@ -332,10 +332,10 @@ public class MainActivity extends Activity implements IEventListener {
 
 	private boolean checkFilter(ScanResult sr) {
 		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
-		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterSSIDEnabled), false);
-		String filterSSID 				= sharedPrefs.getString(getString(R.string.sharedPrefs_filterSSID), "");
-		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterChannelEnabled), false);
-		String filterChannel			= sharedPrefs.getString(getString(R.string.sharedPrefs_filterChannel), "");
+		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
+		String filterSSID 				= sharedPrefs.getString(Util.PREF_FILTER_SSID, "");
+		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
+		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
 
 		if (filterSSIDEnabled && ! sr.SSID.toLowerCase().contains(filterSSID.toLowerCase())) {
 			return false;
@@ -372,8 +372,8 @@ public class MainActivity extends Activity implements IEventListener {
 
 	private void updateFilterButton() {
 		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
-		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterSSIDEnabled), false);
-		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(getString(R.string.sharedPrefs_filterChannelEnabled), false);
+		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
+		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 
 		if (filterSSIDEnabled || filterChannelEnabled) {
 			buttonFilter.setIcon(R.drawable.ic_filter_active);
@@ -382,7 +382,7 @@ public class MainActivity extends Activity implements IEventListener {
 			buttonFilter.setIcon(R.drawable.ic_filter);
 		}
 	}
-	
+
 	private void setWLANEnabled(boolean enable) {
         if (enable && wm.isWifiEnabled() == false) {
         	showToast("Enabling WLAN...");
@@ -392,14 +392,14 @@ public class MainActivity extends Activity implements IEventListener {
         else if (!enable && wm.isWifiEnabled() && wlanEnabledByApp) {
         	showToast("Disabling WLAN...");
             wm.setWifiEnabled(false);
-            wlanEnabledByApp = false;        	
+            wlanEnabledByApp = false;
         }
 	}
-	
+
     public ArrayList<ScanResult> getScanResults() {
     	return scanResultListFiltered;
     }
-    
+
 	public void showToast(String text) {
     	Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
     	toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 180);
@@ -421,7 +421,7 @@ public class MainActivity extends Activity implements IEventListener {
 		setWLANEnabled(true);
 
 		SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-		float scanDelay = sharedPrefs.getFloat(getString(R.string.sharedPrefs_settingScanDelay), Util.getDefaultScanDelay());
+		float scanDelay = sharedPrefs.getFloat(Util.PREF_SETTING_SCAN_DELAY, Util.getDefaultScanDelay());
 
 		long delay = (long) Math.max(0, scanDelay - (System.currentTimeMillis() - lastScanResultReceivedTime));
 
@@ -440,7 +440,7 @@ public class MainActivity extends Activity implements IEventListener {
 	public void setCurrentFragmentID(int fragmentID) {
 		currentFragmentID = fragmentID;
 	}
-	
+
 	public int getCurrentFragmentID() {
 		return currentFragmentID;
 	}
@@ -466,7 +466,7 @@ public class MainActivity extends Activity implements IEventListener {
 			break;
 		}
 	}
-	
+
 //	private void createShowRoomScanResults() {
 //		int count = 5;
 //

@@ -88,7 +88,7 @@ public class FragmentWLANList
 		sortingSpinner.setOnItemSelectedListener(this);
 		
 		SharedPreferences sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        currentSortingOption = sharedPrefs.getInt(getString(R.string.sharedPrefs_sortingOption), SortingHelper.SORTING_OPTION_LEVEL);
+        currentSortingOption = sharedPrefs.getInt(Util.PREF_SORTING_OPTION, SortingHelper.SORTING_OPTION_LEVEL);
 		int spinnerPosition = sortingAdapter.getPosition(sortingHelper.getSortingOptionName(currentSortingOption));
 		sortingSpinner.setSelection(spinnerPosition);
         
@@ -111,7 +111,7 @@ public class FragmentWLANList
     public void onPause() {
     	super.onPause();
     	SharedPreferences.Editor editor = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
-        editor.putInt(getString(R.string.sharedPrefs_sortingOption), currentSortingOption);
+        editor.putInt(Util.PREF_SORTING_OPTION, currentSortingOption);
         editor.commit();
     }
     

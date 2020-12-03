@@ -4,20 +4,5 @@
     <string name="app_name">WLANScanner</string>
     <string name="www">https://github.com/bewue/WLANScanner</string>
     <string name="dev_email">bitbatzen@gmail.com</string>
-    
-    <string name="dialog_wlanlistiteminfo_header_capabilities"><u>Capabilities</u></string>
-    <string name="dialog_wlanlistiteminfo_header_frequency"><u>Frequency</u></string>
-    
-    <string name="sharedPrefs_scanEnabled">sharedPrefs_scanEnabled</string>
-    <string name="sharedPrefs_sortingOption">sharedPrefs_sortingOption</string>
-    <string name="sharedPrefs_wlanEnabledByApp">sharedPrefs_wlanEnabledByApp</string>
-    <string name="sharedPrefs_selectedTab">sharedPrefs_selectedTab</string>
-
-    <string name="sharedPrefs_filterSSIDEnabled">sharedPrefs_filterSSIDEnabled</string>
-    <string name="sharedPrefs_filterSSID">sharedPrefs_filterSSID</string>
-    <string name="sharedPrefs_filterChannelEnabled">sharedPrefs_filterChannelEnabled</string>
-    <string name="sharedPrefs_filterChannel">sharedPrefs_filterChannel</string>
-    
-    <string name="sharedPrefs_settingScanDelay">sharedPrefs_settingScanDelay</string>
 
 </resources>

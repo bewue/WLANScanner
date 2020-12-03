@@ -31,6 +31,18 @@ import java.util.Map.Entry;
 
 public class Util {
 
+	public static final String PREF_SCAN_ENABLED			= "PREF_SCAN_ENABLED";
+	public static final String PREF_SORTING_OPTION			= "PREF_SORTING_OPTION";
+	public static final String PREF_WLAN_ENABLED_BY_APP		= "PREF_WLAN_ENABLED_BY_APP";
+	public static final String PREF_SELECTED_TAB			= "PREF_SELECTED_TAB";
+
+	public static final String PREF_FILTER_SSID_ENABLED		= "PREF_FILTER_SSID_ENABLED";
+	public static final String PREF_FILTER_SSID				= "PREF_FILTER_SSID";
+	public static final String PREF_FILTER_CHANNEL_ENABLED	= "PREF_FILTER_CHANNEL_ENABLED";
+	public static final String PREF_FILTER_CHANNEL			= "PREF_FILTER_CHANNEL";
+
+	public static final String PREF_SETTING_SCAN_DELAY		= "PREF_SETTING_SCAN_DELAY";
+
 	public enum FrequencyBand {
 		FIVE_GHZ,
 		TWO_FOUR_GHZ,

@@ -74,22 +74,22 @@ public class DialogFilter
 		SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
 
 		// filter ssid enabled
-		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(activity.getString(R.string.sharedPrefs_filterSSIDEnabled), false);
+		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
 		cbFilterSSIDEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_ssid);
 		cbFilterSSIDEnabled.setChecked(filterSSIDEnabled);
 
 		// filter ssid
-		String filterSSID 				= sharedPrefs.getString(activity.getString(R.string.sharedPrefs_filterSSID), "");
+		String filterSSID 				= sharedPrefs.getString(Util.PREF_FILTER_SSID, "");
 		etFilterSSID 					= (EditText) findViewById(R.id.et_dialog_filter_ssid);
 		etFilterSSID.setText(filterSSID);
 
 		// filter channel enabled
-		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(activity.getString(R.string.sharedPrefs_filterChannelEnabled), false);
+		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 		cbFilterChannelEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_channel);
 		cbFilterChannelEnabled.setChecked(filterChannelEnabled);
 
 		// filter channel
-		String filterChannel			= sharedPrefs.getString(activity.getString(R.string.sharedPrefs_filterChannel), "");
+		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
 		etFilterChannel 				= (EditText) findViewById(R.id.et_dialog_filter_channel);
 		etFilterChannel.setText(filterChannel);
 
@@ -109,8 +109,8 @@ public class DialogFilter
 		}
 
 		// save ssid filter
-		editor.putBoolean(activity.getString(R.string.sharedPrefs_filterSSIDEnabled), filterSSIDEnabled);
-		editor.putString(activity.getString(R.string.sharedPrefs_filterSSID), filterSSID);
+		editor.putBoolean(Util.PREF_FILTER_SSID_ENABLED, filterSSIDEnabled);
+		editor.putString(Util.PREF_FILTER_SSID, filterSSID);
 
 		boolean filterChannelEnabled	= cbFilterChannelEnabled.isChecked();
 		String filterChannel			= etFilterChannel.getText().toString();
@@ -132,8 +132,8 @@ public class DialogFilter
 		}
 
 		// save channel filter
-		editor.putBoolean(activity.getString(R.string.sharedPrefs_filterChannelEnabled), filterChannelEnabled);
-		editor.putString(activity.getString(R.string.sharedPrefs_filterChannel), filterChannel);
+		editor.putBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, filterChannelEnabled);
+		editor.putString(Util.PREF_FILTER_CHANNEL, filterChannel);
 
 		editor.commit();
 

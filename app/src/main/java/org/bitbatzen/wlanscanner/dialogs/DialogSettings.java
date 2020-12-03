@@ -63,14 +63,14 @@ public class DialogSettings
 		buttonOk.setOnClickListener(this);
 
 		SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
-		float scanDelay = sharedPrefs.getFloat(activity.getString(R.string.sharedPrefs_settingScanDelay), Util.getDefaultScanDelay());
+		float scanDelay = sharedPrefs.getFloat(Util.PREF_SETTING_SCAN_DELAY, Util.getDefaultScanDelay());
 
 		etScanDelay = (EditText) findViewById(R.id.et_dialog_settings_scan_delay);
 		etScanDelay.setText(String.valueOf(scanDelay / 1000));
 
 		if (android.os.Build.VERSION.SDK_INT >= 28) {
 			TextView tvScanDelayInfo = (TextView) findViewById(R.id.tv_dialog_settings_scan_delay_info);
-			tvScanDelayInfo.setText("Since android 9 each foreground app can only scan four times in a 2-minute period by default. Thus the default scan delay is " + Util.getDefaultScanDelay() / 1000f + " seconds.");
+			tvScanDelayInfo.setText("Since android 9 each foreground app can only scan four times in a 2-minute period by default. Thus the default scan delay should be set to " + Util.getDefaultScanDelay() / 1000f + " seconds to get continuous scan results");
 		}
 	}
 
@@ -84,7 +84,7 @@ public class DialogSettings
 
 		// save scan delay
 		SharedPreferences.Editor editor = activity.getPreferences(Context.MODE_PRIVATE).edit();
-		editor.putFloat(activity.getString(R.string.sharedPrefs_settingScanDelay), scanDelay);
+		editor.putFloat(Util.PREF_SETTING_SCAN_DELAY, scanDelay);
 
 		editor.commit();
 
