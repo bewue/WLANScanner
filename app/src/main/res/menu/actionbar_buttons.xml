@@ -11,6 +11,11 @@
 		android:showAsAction="always" />
 
 	<item
+		android:id="@+id/actionbutton_settings"
+		android:icon="@drawable/ic_settings"
+		android:showAsAction="always" />
+
+	<item
 		android:id="@+id/actionbutton_about"
 		android:icon="@drawable/ic_info"
 		android:showAsAction="always" />

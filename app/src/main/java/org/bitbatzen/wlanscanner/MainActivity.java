@@ -49,6 +49,7 @@ import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
 import org.bitbatzen.wlanscanner.dialogs.DialogFilter;
 import org.bitbatzen.wlanscanner.dialogs.DialogPermissions;
 import org.bitbatzen.wlanscanner.dialogs.DialogQuit;
+import org.bitbatzen.wlanscanner.dialogs.DialogSettings;
 import org.bitbatzen.wlanscanner.events.EventManager;
 import org.bitbatzen.wlanscanner.events.Events;
 import org.bitbatzen.wlanscanner.events.Events.EventID;
@@ -56,17 +57,23 @@ import org.bitbatzen.wlanscanner.events.IEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
+public class MainActivity extends Activity implements IEventListener {
 
-public class MainActivity extends Activity implements IEventListener { 
-	
+	public final static boolean SHOWROOM_MODE_ENABLED	= true;
+
+	public final static int MAX_SCAN_RESULT_AGE			= 35; // (in seconds)
+
 	public final static int FRAGMENT_ID_WLANLIST		= 0;
 	public final static int FRAGMENT_ID_DIAGRAM_24GHZ	= 1;
 	public final static int FRAGMENT_ID_DIAGRAM_5GHZ	= 2;
 
 	private final static String[] permissions = new String[] {
 		Manifest.permission.ACCESS_FINE_LOCATION,
+		Manifest.permission.ACCESS_COARSE_LOCATION,
 		Manifest.permission.ACCESS_WIFI_STATE,
 		Manifest.permission.CHANGE_WIFI_STATE
 	};
@@ -96,6 +103,8 @@ public class MainActivity extends Activity implements IEventListener {
     private boolean wlanEnabledByApp;
 
     private boolean scanEnabled;
+    private boolean scanTimerIsRunning		= false;
+	private long lastScanResultReceivedTime = 0;
     
     private SharedPreferences sharedPrefs;
     
@@ -176,7 +185,7 @@ public class MainActivity extends Activity implements IEventListener {
 
         registerReceiver(brScanResults, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
-        startScan();
+		requestScan();
 
 		handlePermissions();
 	}
@@ -270,6 +279,9 @@ public class MainActivity extends Activity implements IEventListener {
 			case R.id.actionbutton_filter:
 				new DialogFilter(this).show();
 				return true;
+			case R.id.actionbutton_settings:
+				new DialogSettings(this).show();
+				return true;
 	        case R.id.actionbutton_about:
 	        	new DialogAbout(this).show();
 	        	return true;
@@ -291,8 +303,8 @@ public class MainActivity extends Activity implements IEventListener {
 
     		if (android.os.Build.VERSION.SDK_INT >= 17) {
 				long age = ((SystemClock.elapsedRealtime() * 1000) - sr.timestamp) / 1000000;
-				// if the wlan was last seen more than 30 seconds ago, do not add it to the list
-				if (age > 30) {
+				// if the wlan was last seen more than MAX_SCAN_RESULT_AGE seconds ago, do not add it to the list
+				if (age > MAX_SCAN_RESULT_AGE) {
 					continue;
 				}
     		}
@@ -304,8 +316,6 @@ public class MainActivity extends Activity implements IEventListener {
 			}
     	}
 
-		startScan();
-
     	Animation anim = ivRefreshIndicator.getAnimation();
     	if (anim == null || (anim != null && anim.hasEnded())) {
 	    	ivRefreshIndicator.setVisibility(View.VISIBLE);
@@ -315,6 +325,9 @@ public class MainActivity extends Activity implements IEventListener {
     	
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
     	invalidateOptionsMenu();
+
+    	lastScanResultReceivedTime = System.currentTimeMillis();
+		requestScan();
 	}
 
 	private boolean checkFilter(ScanResult sr) {
@@ -375,7 +388,7 @@ public class MainActivity extends Activity implements IEventListener {
         	showToast("Enabling WLAN...");
             wm.setWifiEnabled(true);
             wlanEnabledByApp = true;
-        } 	
+        }
         else if (!enable && wm.isWifiEnabled() && wlanEnabledByApp) {
         	showToast("Disabling WLAN...");
             wm.setWifiEnabled(false);
@@ -396,15 +409,32 @@ public class MainActivity extends Activity implements IEventListener {
 	private void setScanEnabled(boolean enable) {
 		scanEnabled = enable;
 		if (enable) {
-			startScan();
+			requestScan();
 		}
 	}
 
-	private void startScan() {
-		setWLANEnabled(true);
-		if (scanEnabled) {
-			wm.startScan();
+	private void requestScan() {
+		if (! scanEnabled || scanTimerIsRunning) {
+			return;
 		}
+
+		setWLANEnabled(true);
+
+		SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
+		float scanDelay = sharedPrefs.getFloat(getString(R.string.sharedPrefs_settingScanDelay), Util.getDefaultScanDelay());
+
+		long delay = (long) Math.max(0, scanDelay - (System.currentTimeMillis() - lastScanResultReceivedTime));
+
+		scanTimerIsRunning = true;
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				scanTimerIsRunning = false;
+				if (scanEnabled) {
+					wm.startScan();
+				}
+			}
+		}, delay);
 	}
 
 	public void setCurrentFragmentID(int fragmentID) {
@@ -436,4 +466,13 @@ public class MainActivity extends Activity implements IEventListener {
 			break;
 		}
 	}
+	
+//	private void createShowRoomScanResults() {
+//		int count = 5;
+//
+//		for (int i = 0; i < count; i++) {
+//			ScanResult sr = new ScanResult();
+//			sr.level = ...
+//		}
+//	}
 }

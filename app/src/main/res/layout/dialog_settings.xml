@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_dialog_settings_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="Settings"
+        android:textColor="@color/wlanscanner_dialog_header"
+        android:textSize="20sp"
+        android:textStyle="bold"></TextView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_dialog_settings_scan_delay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="160dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="16dp"
+            android:text="Scan delay (sec): "
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_dialog_settings_scan_delay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_dialog_settings_scan_delay"
+            android:width="140dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textColorHint="@color/wlanscanner_list_item_color1" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_dialog_settings_scan_delay_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/wlanscanner_list_item_color2"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_dialog_settings_ok"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="8dp"
+            android:background="@drawable/buttonselector"
+            android:clickable="true"
+            android:text="Ok"
+            android:textColor="@color/wlanscanner_button_text"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

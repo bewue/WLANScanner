@@ -17,5 +17,7 @@
     <string name="sharedPrefs_filterSSID">sharedPrefs_filterSSID</string>
     <string name="sharedPrefs_filterChannelEnabled">sharedPrefs_filterChannelEnabled</string>
     <string name="sharedPrefs_filterChannel">sharedPrefs_filterChannel</string>
+    
+    <string name="sharedPrefs_settingScanDelay">sharedPrefs_settingScanDelay</string>
 
 </resources>

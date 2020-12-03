@@ -215,6 +215,16 @@ public class Util {
 				return "";
 		}
 	}
+
+	public static int getDefaultScanDelay() {
+		if (android.os.Build.VERSION.SDK_INT >= 28) {
+			// since android 9 each foreground app can scan four times in a 2-minute period
+			return 30500;
+		}
+		else {
+			return 500;
+		}
+	}
 	
 	public static String getCapabilitiesString(String capabilities) {
 		String s = capabilities.replace("][", " ")
