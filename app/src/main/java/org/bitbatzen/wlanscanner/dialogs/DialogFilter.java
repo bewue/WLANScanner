@@ -52,6 +52,9 @@ public class DialogFilter
 	CheckBox cbFilterChannelEnabled;
 	EditText etFilterChannel;
 
+	CheckBox cbFilterCapabiliEnabled;
+	EditText etFilterCapabili;
+
 	TextView etFilterInfo;
 
 
@@ -92,6 +95,16 @@ public class DialogFilter
 		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
 		etFilterChannel 				= (EditText) findViewById(R.id.et_dialog_filter_channel);
 		etFilterChannel.setText(filterChannel);
+
+		// filter capabili enabled
+		boolean filterCapabiliEnabled	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
+		cbFilterCapabiliEnabled			= (CheckBox) findViewById(R.id.cb_dialog_filter_capabili);
+		cbFilterCapabiliEnabled.setChecked(filterCapabiliEnabled);
+
+		// filter capabili
+		String filterCapabili			= sharedPrefs.getString(Util.PREF_FILTER_CAPABILI, "");
+		etFilterCapabili 				= (EditText) findViewById(R.id.et_dialog_filter_capabili);
+		etFilterCapabili.setText(filterCapabili);
 
 		etFilterInfo = (TextView) findViewById(R.id.tv_dialog_filter_info);
 	}
@@ -134,6 +147,19 @@ public class DialogFilter
 		// save channel filter
 		editor.putBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, filterChannelEnabled);
 		editor.putString(Util.PREF_FILTER_CHANNEL, filterChannel);
+
+		boolean filterCapabiliEnabled	= cbFilterCapabiliEnabled.isChecked();
+		String filterCapabili			= etFilterCapabili.getText().toString();
+
+		// validate capabilities filter
+		if (filterCapabiliEnabled && filterCapabili.equals("")) {
+			etFilterInfo.setText("Invalid capabilities filter!");
+			return;
+		}
+
+		// save capabilities filter
+		editor.putBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, filterCapabiliEnabled);
+		editor.putString(Util.PREF_FILTER_CAPABILI, filterCapabili);
 
 		editor.commit();
 

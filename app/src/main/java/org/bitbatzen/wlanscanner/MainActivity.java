@@ -332,10 +332,15 @@ public class MainActivity extends Activity implements IEventListener {
 
 	private boolean checkFilter(ScanResult sr) {
 		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
+
 		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
 		String filterSSID 				= sharedPrefs.getString(Util.PREF_FILTER_SSID, "");
+
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
+
+		boolean filterCapabiliEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
+		String filterCapabili			= sharedPrefs.getString(Util.PREF_FILTER_CAPABILI, "");
 
 		if (filterSSIDEnabled && ! sr.SSID.toLowerCase().contains(filterSSID.toLowerCase())) {
 			return false;
@@ -351,6 +356,10 @@ public class MainActivity extends Activity implements IEventListener {
 			else if (Util.getChannel(sr.frequency) != fChannel) {
 				return false;
 			}
+		}
+
+		if (filterCapabiliEnabled && ! sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase())) {
+			return false;
 		}
 
 		return true;
@@ -374,8 +383,9 @@ public class MainActivity extends Activity implements IEventListener {
 		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
 		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
+		boolean filterCapabiliEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
 
-		if (filterSSIDEnabled || filterChannelEnabled) {
+		if (filterSSIDEnabled || filterChannelEnabled || filterCapabiliEnabled) {
 			buttonFilter.setIcon(R.drawable.ic_filter_active);
 		}
 		else {

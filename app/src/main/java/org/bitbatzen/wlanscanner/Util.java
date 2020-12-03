@@ -38,8 +38,12 @@ public class Util {
 
 	public static final String PREF_FILTER_SSID_ENABLED		= "PREF_FILTER_SSID_ENABLED";
 	public static final String PREF_FILTER_SSID				= "PREF_FILTER_SSID";
+
 	public static final String PREF_FILTER_CHANNEL_ENABLED	= "PREF_FILTER_CHANNEL_ENABLED";
 	public static final String PREF_FILTER_CHANNEL			= "PREF_FILTER_CHANNEL";
+
+	public static final String PREF_FILTER_CAPABILI_ENABLED	= "PREF_FILTER_CAPABILI_ENABLED";
+	public static final String PREF_FILTER_CAPABILI			= "PREF_FILTER_CAPABILI";
 
 	public static final String PREF_SETTING_SCAN_DELAY		= "PREF_SETTING_SCAN_DELAY";
 
