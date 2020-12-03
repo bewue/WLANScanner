@@ -10,30 +10,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/wlanscanner_list_ssid"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/rowItemLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/rowItemBSSID"
-        android:layout_alignBottom="@+id/rowItemBSSID"
+        android:layout_alignTop="@id/rowItemSSID"
+        android:layout_alignParentTop="false"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="2dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/list_item_level_bg_green"
         android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:textColor="@color/wlanscanner_diagram_bg"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/rowItemChannel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/rowItemLevel"
-        android:layout_alignBottom="@+id/rowItemLevel"
-        android:background="@color/wlanscanner_list_item_bg"
+        android:layout_alignBottom="@id/rowItemFrequencyBand"
+        android:background="@drawable/list_item_highlight_bg"
         android:paddingLeft="2sp"
         android:paddingTop="0sp"
         android:paddingRight="2sp"
@@ -45,32 +45,36 @@
         android:id="@+id/rowItemChannelWidth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/rowItemChannel"
-        android:layout_alignBottom="@+id/rowItemLevel"
+        android:layout_alignBottom="@id/rowItemFrequencyBand"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/rowItemFrequencyBand"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rowItemCapabilities"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="false"
         android:layout_alignParentRight="false"
-        android:layout_toRightOf="@id/rowItemSSID"
-        android:padding="5sp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:paddingLeft="2sp"
+        android:paddingTop="0sp"
+        android:paddingRight="2sp"
+        android:paddingBottom="0sp"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/rowItemWLANStandard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/rowItemFrequencyBand"
         android:layout_alignParentTop="false"
         android:layout_alignParentRight="false"
-        android:layout_toRightOf="@id/rowItemFrequencyBand"
-        android:paddingTop="5sp"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="11sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/rowItemCapabilities"
@@ -86,8 +90,10 @@
         android:id="@+id/rowItemBSSID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rowItemCapabilities"
-        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@id/rowItemFrequencyBand"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="false"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="12sp" />
 

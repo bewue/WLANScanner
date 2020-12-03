@@ -16,7 +16,7 @@
 	
 	<color name="wlanscanner_list_divider">#333333</color>
 	<color name="wlanscanner_list_ssid">#aaaaaa</color>
-	<color name="wlanscanner_list_item_bg">#222222</color>
+	<color name="wlanscanner_list_item_bg">#2C2C2C</color>
 	<color name="wlanscanner_list_item_color1">#666666</color>
 	<color name="wlanscanner_list_item_color2">#888888</color>
 
@@ -24,4 +24,8 @@
 	<color name="wlanscanner_diagram_labels">#666666</color>
 	<color name="wlanscanner_diagram_border">#666666</color>
 	<color name="wlanscanner_diagram_lines">#333333</color>
+
+	<color name="wlanscanner_list_item_level_red">#BA3514</color>
+	<color name="wlanscanner_list_item_level_yellow">#B0B014</color>
+	<color name="wlanscanner_list_item_level_green">#21A721</color>
 </resources>

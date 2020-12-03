@@ -75,6 +75,23 @@ class ArrayAdapterWLAN extends BaseAdapter {
         TextView ssidItem = (TextView) view.findViewById(R.id.rowItemSSID);
         ssidItem.setText(itemData.SSID);
 
+        // capabilities
+        TextView capabilitiesItem = (TextView) view.findViewById(R.id.rowItemCapabilities);
+        capabilitiesItem.setText(Util.getCapabilitiesString(itemData.capabilities));
+
+        // level
+        TextView levelItem = (TextView) view.findViewById(R.id.rowItemLevel);
+        levelItem.setText(Integer.toString(itemData.level) + " dBm");
+        if (itemData.level >= -65) {
+            levelItem.setBackgroundResource(R.drawable.list_item_level_bg_green);
+        }
+        else if (itemData.level >= -85) {
+            levelItem.setBackgroundResource(R.drawable.list_item_level_bg_yellow);
+        }
+        else {
+            levelItem.setBackgroundResource(R.drawable.list_item_level_bg_red);
+        }
+
         // frequency band
         TextView bandItem = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
         Util.FrequencyBand fBand = Util.getFrequencyBand(itemData.frequency);
@@ -96,26 +113,13 @@ class ArrayAdapterWLAN extends BaseAdapter {
         else {
             wlanStandard.setText(sWlanStandard);
         }
+        wlanStandard.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, parent.getResources().getDisplayMetrics()));
 
-        // capabilities
-        TextView capabilitiesItem = (TextView) view.findViewById(R.id.rowItemCapabilities);
-        capabilitiesItem.setText(Util.getCapabilitiesString(itemData.capabilities));
-
-        // bssid (mac)
-        TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);
-        bssidItem.setText(itemData.BSSID);
-
-        // level
-        TextView levelItem = (TextView) view.findViewById(R.id.rowItemLevel);
-        levelItem.setText(Integer.toString(itemData.level) + " dBm");
-        if (itemData.level >= -65) {
-            levelItem.setBackgroundColor(Color.rgb(41, 163, 41));
-        }
-        else if (itemData.level >= -85) {
-            levelItem.setBackgroundColor(Color.rgb(204, 204, 0));
-        }
-        else {
-            levelItem.setBackgroundColor(Color.rgb(230, 46, 0));
+        // channel width
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            TextView channelWidthItem = (TextView) view.findViewById(R.id.rowItemChannelWidth);
+            channelWidthItem.setText(Util.getChannelWidth(itemData) + " MHz");
+            channelWidthItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, parent.getResources().getDisplayMetrics()));
         }
 
         // channel
@@ -126,19 +130,13 @@ class ArrayAdapterWLAN extends BaseAdapter {
         else {
             channel = Integer.toString(Util.getChannel(itemData.frequency));
         }
-
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
         channelItem.setText(channel);
-        float cOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, parent.getResources().getDisplayMetrics());
-        channelItem.setX(parent.getWidth() - cOffset);
+        channelItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190, parent.getResources().getDisplayMetrics()));
 
-        // channel width
-        if (android.os.Build.VERSION.SDK_INT >= 23) {
-            TextView channelWidthItem = (TextView) view.findViewById(R.id.rowItemChannelWidth);
-            channelWidthItem.setText(Util.getChannelWidth(itemData) + " MHz");
-            float cwOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 135, parent.getResources().getDisplayMetrics());
-            channelWidthItem.setX(parent.getWidth() - cwOffset);
-        }
+        // bssid (mac)
+        TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);
+        bssidItem.setText(itemData.BSSID);
 
         return view;
     }
