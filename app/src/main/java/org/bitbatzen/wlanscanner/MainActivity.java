@@ -20,6 +20,7 @@
 package org.bitbatzen.wlanscanner;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -63,7 +64,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends Activity implements IEventListener {
 
-	public final static boolean SHOWROOM_MODE_ENABLED	= true;
+	public final static boolean SHOWROOM_MODE_ENABLED	= false;
 
 	public final static int MAX_SCAN_RESULT_AGE			= 35; // (in seconds)
 
@@ -291,11 +292,18 @@ public class MainActivity extends Activity implements IEventListener {
 	}
 
 	private void onReceivedScanResults() {
-    	if (! scanEnabled) {
-    		return;
-    	}
+		if (!scanEnabled) {
+			return;
+		}
 
-    	List<ScanResult> scanResults = wm.getScanResults();
+		List<ScanResult> scanResults = null;
+		if (SHOWROOM_MODE_ENABLED) {
+			scanResults = createShowRoomScanResults();
+		}
+		else {
+			scanResults = wm.getScanResults();
+		}
+
 		scanResultListOrig.clear();
     	scanResultListFiltered.clear();
 
@@ -477,12 +485,80 @@ public class MainActivity extends Activity implements IEventListener {
 		}
 	}
 
-//	private void createShowRoomScanResults() {
-//		int count = 5;
-//
-//		for (int i = 0; i < count; i++) {
-//			ScanResult sr = new ScanResult();
-//			sr.level = ...
-//		}
-//	}
+	@TargetApi(30)
+	private List<ScanResult> createShowRoomScanResults() {
+		List<ScanResult> scanResults = new ArrayList<>();
+
+		ScanResult sr = new ScanResult();
+		sr.SSID			= "SSID-1";
+		sr.BSSID		= "73:44:f3:93:4a:71";
+		sr.level 		= -38;
+		sr.frequency	= Util.getFrequency(6);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
+		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-2";
+		sr.BSSID		= "43:81:f3:2a:19:e8";
+		sr.level 		= -45;
+		sr.frequency	= Util.getFrequency(6);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
+		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-3";
+		sr.BSSID		= "cc:2a:65:21:b9:1a";
+		sr.level 		= -51;
+		sr.frequency	= Util.getFrequency(1);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
+		sr.capabilities	= "WPA2-PSK-CCMP ESS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-4";
+		sr.BSSID		= "5a:2b:83:2e:40:f7";
+		sr.level 		= -74;
+		sr.frequency	= Util.getFrequency(13);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_20MHZ;
+		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-5";
+		sr.BSSID		= "3c:8e:41:49:b9:22";
+		sr.level 		= -81;
+		sr.frequency	= Util.getFrequency(8);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
+		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-6";
+		sr.BSSID		= "84:1c:7e:31:7a:82";
+		sr.level 		= -86;
+		sr.frequency	= Util.getFrequency(13);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_20MHZ;
+		sr.capabilities	= "ESS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-7";
+		sr.BSSID		= "62:28:bc:c3:8a:91";
+		sr.level 		= -92;
+		sr.frequency	= Util.getFrequency(8);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
+		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		return scanResults;
+	}
 }
