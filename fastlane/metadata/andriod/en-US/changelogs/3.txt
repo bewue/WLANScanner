@@ -1,0 +1,8 @@
+- scan interval can now be modified (important since Android 9)
+- added permission dialog (Android 6)
+- added WiFi filter (SSID, channel, capabilities)
+- showing correct channel width in the list and the diagrams (Android 6)
+- displaying the WLAN standard (from Android 11)
+- colored marking of the WLAN level
+- UI polish
+- new icon :)
