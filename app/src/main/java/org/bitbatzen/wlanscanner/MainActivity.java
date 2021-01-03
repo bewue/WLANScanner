@@ -71,6 +71,7 @@ public class MainActivity extends Activity implements IEventListener {
 	public final static int FRAGMENT_ID_WLANLIST		= 0;
 	public final static int FRAGMENT_ID_DIAGRAM_24GHZ	= 1;
 	public final static int FRAGMENT_ID_DIAGRAM_5GHZ	= 2;
+	public final static int FRAGMENT_ID_DIAGRAM_6GHZ	= 3;
 
 	private final static String[] permissions = new String[] {
 		Manifest.permission.ACCESS_FINE_LOCATION,
@@ -79,10 +80,11 @@ public class MainActivity extends Activity implements IEventListener {
 		Manifest.permission.CHANGE_WIFI_STATE
 	};
 
-	private ActionBar.Tab tab1, tab2, tab3;
+	private ActionBar.Tab tab1, tab2, tab3, tab4;
 	private Fragment fragmentWLANList;
 	private Fragment fragmentDiagram24GHz;
 	private Fragment fragmentDiagram5GHz;
+	private Fragment fragmentDiagram6GHz;
 	private int currentFragmentID;
 
 	private MenuItem buttonToggleScan;
@@ -142,21 +144,23 @@ public class MainActivity extends Activity implements IEventListener {
     	fragmentWLANList 		= new FragmentWLANList();
     	fragmentDiagram24GHz 	= new FragmentDiagram24GHz();
     	fragmentDiagram5GHz 	= new FragmentDiagram5GHz();
+		fragmentDiagram6GHz 	= new FragmentDiagram6GHz();
 
         tab1 = actionBar.newTab().setText("List");
-        tab1.setIcon(R.drawable.ic_tab_list);
         tab1.setTabListener(new MyTabListener(this, fragmentWLANList));
-        actionBar.addTab(tab1, 0, currentFragmentID == 0);
+        actionBar.addTab(tab1, 0, currentFragmentID == FRAGMENT_ID_WLANLIST);
 
         tab2 = actionBar.newTab().setText("2.4 GHz");
-        tab2.setIcon(R.drawable.ic_tab_diagram);
         tab2.setTabListener(new MyTabListener(this, fragmentDiagram24GHz));
-        actionBar.addTab(tab2, 1, currentFragmentID == 1);
+        actionBar.addTab(tab2, 1, currentFragmentID == FRAGMENT_ID_DIAGRAM_24GHZ);
 
         tab3 = actionBar.newTab().setText("5 GHz");
-        tab3.setIcon(R.drawable.ic_tab_diagram);
         tab3.setTabListener(new MyTabListener(this, fragmentDiagram5GHz));
-        actionBar.addTab(tab3, 2, currentFragmentID == 2);
+        actionBar.addTab(tab3, 2, currentFragmentID == FRAGMENT_ID_DIAGRAM_5GHZ);
+
+		tab4 = actionBar.newTab().setText("6 GHz");
+		tab4.setTabListener(new MyTabListener(this, fragmentDiagram6GHz));
+		actionBar.addTab(tab4, 3, currentFragmentID == FRAGMENT_ID_DIAGRAM_6GHZ);
 
 		ivPauseButton = new ImageView(MainActivity.this);
 		ivPauseButton.setImageResource(R.drawable.ic_pause);
@@ -356,12 +360,16 @@ public class MainActivity extends Activity implements IEventListener {
 
 		if (filterChannelEnabled) {
 			int fChannel = Integer.parseInt(filterChannel);
-			if (android.os.Build.VERSION.SDK_INT >= 23 && sr.channelWidth == ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ) {
-				if (Util.getChannel(sr.centerFreq0) != fChannel && Util.getChannel(sr.centerFreq1) != fChannel) {
-					return false;
+			int[] frequencies = Util.getFrequencies(sr);
+
+			boolean channelFound = false;
+			for (int f : frequencies) {
+				if (Util.getChannel(f) == fChannel) {
+					channelFound = true;
 				}
 			}
-			else if (Util.getChannel(sr.frequency) != fChannel) {
+
+			if (! channelFound) {
 				return false;
 			}
 		}
@@ -493,7 +501,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-1";
 		sr.BSSID		= "73:44:f3:93:4a:71";
 		sr.level 		= -38;
-		sr.frequency	= Util.getFrequency(6);
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 6);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
 		sr.timestamp	= System.currentTimeMillis();
@@ -503,7 +511,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-2";
 		sr.BSSID		= "43:81:f3:2a:19:e8";
 		sr.level 		= -45;
-		sr.frequency	= Util.getFrequency(6);
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 6);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
 		sr.timestamp	= System.currentTimeMillis();
@@ -513,7 +521,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-3";
 		sr.BSSID		= "cc:2a:65:21:b9:1a";
 		sr.level 		= -51;
-		sr.frequency	= Util.getFrequency(1);
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 1);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS";
 		sr.timestamp	= System.currentTimeMillis();
@@ -523,7 +531,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-4";
 		sr.BSSID		= "5a:2b:83:2e:40:f7";
 		sr.level 		= -74;
-		sr.frequency	= Util.getFrequency(13);
+		sr.frequency	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 13);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_20MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
 		sr.timestamp	= System.currentTimeMillis();
@@ -533,7 +541,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-5";
 		sr.BSSID		= "3c:8e:41:49:b9:22";
 		sr.level 		= -81;
-		sr.frequency	= Util.getFrequency(8);
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 8);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
 		sr.timestamp	= System.currentTimeMillis();
@@ -543,7 +551,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-6";
 		sr.BSSID		= "84:1c:7e:31:7a:82";
 		sr.level 		= -86;
-		sr.frequency	= Util.getFrequency(13);
+		sr.frequency	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 13);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_20MHZ;
 		sr.capabilities	= "ESS";
 		sr.timestamp	= System.currentTimeMillis();
@@ -553,9 +561,20 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-7";
 		sr.BSSID		= "62:28:bc:c3:8a:91";
 		sr.level 		= -92;
-		sr.frequency	= Util.getFrequency(8);
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 8);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-8";
+		sr.BSSID		= "34:98:af:33:9f:44";
+		sr.level 		= -55;
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.SIX_GHZ, 39);
+		sr.centerFreq1	= Util.getFrequency(Util.FrequencyBand.SIX_GHZ, 87);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ;
+		sr.capabilities	= "ESS";
 		sr.timestamp	= System.currentTimeMillis();
 		scanResults.add(sr);
 

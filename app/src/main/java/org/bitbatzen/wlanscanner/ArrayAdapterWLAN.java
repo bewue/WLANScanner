@@ -22,6 +22,7 @@ package org.bitbatzen.wlanscanner;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.wifi.ScanResult;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,13 +95,16 @@ class ArrayAdapterWLAN extends BaseAdapter {
 
         // frequency band
         TextView bandItem = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
-        Util.FrequencyBand fBand = Util.getFrequencyBand(itemData.frequency);
+        Util.FrequencyBand fBand = Util.getFrequencyBand(itemData);
         String text = "";
         if (fBand == Util.FrequencyBand.TWO_FOUR_GHZ) {
             text = "2.4 GHz";
         }
         else if (fBand == Util.FrequencyBand.FIVE_GHZ) {
             text = "5 GHz";
+        }
+        else if (fBand == Util.FrequencyBand.SIX_GHZ) {
+            text = "6 GHz";
         }
         bandItem.setText(text);
 
@@ -124,11 +128,12 @@ class ArrayAdapterWLAN extends BaseAdapter {
 
         // channel
         String channel = "";
-        if (android.os.Build.VERSION.SDK_INT >= 23 && itemData.channelWidth == ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ) {
-            channel = Util.getChannel(itemData.centerFreq0) + "+" + Util.getChannel(itemData.centerFreq1);
+        int[] frequencies = Util.getFrequencies(itemData);
+        if (frequencies.length == 1) {
+            channel = String.valueOf(Util.getChannel(frequencies[0]));
         }
-        else {
-            channel = Integer.toString(Util.getChannel(itemData.frequency));
+        else if (frequencies.length == 2) {
+            channel = Util.getChannel(frequencies[0]) + "+" + Util.getChannel(frequencies[1]);
         }
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
         channelItem.setText(channel);

@@ -138,7 +138,9 @@ public class DialogFilter
 				return;
 			}
 
-			if (Util.getFrequency(fChannel) == -1) {
+			if (Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, fChannel) == -1
+					&& Util.getFrequency(Util.FrequencyBand.FIVE_GHZ, fChannel) == -1
+					&& Util.getFrequency(Util.FrequencyBand.SIX_GHZ, fChannel) == -1) {
 				etFilterInfo.setText("Invalid channel filter!");
 				return;
 			}

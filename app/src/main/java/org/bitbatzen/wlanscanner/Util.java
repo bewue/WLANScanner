@@ -48,19 +48,24 @@ public class Util {
 	public static final String PREF_SETTING_SCAN_DELAY		= "PREF_SETTING_SCAN_DELAY";
 
 	public enum FrequencyBand {
-		FIVE_GHZ,
 		TWO_FOUR_GHZ,
+		FIVE_GHZ,
+		SIX_GHZ,
 		UNKNOWN
 	}
 	
     public static final Map<Integer, Integer> CHANNELS_24GHZ_BAND;
     public static final Map<Integer, Integer> CHANNELS_5GHZ_BAND;
+	public static final Map<Integer, Integer> CHANNELS_6GHZ_BAND;
 
     public static final int START_24GHZ_BAND = 2412;
     public static final int END_24GHZ_BAND = 2484;
 
     public static final int START_5GHZ_BAND = 4915;
     public static final int END_5GHZ_BAND = 5865;
+
+	public static final int START_6GHZ_BAND = 5940;
+	public static final int END_6GHZ_BAND = 7100;
     
     static {
     	Map<Integer, Integer> aMap = new HashMap<Integer, Integer>();
@@ -147,7 +152,44 @@ public class Util {
 		aMap.put(5845, 169);
 		aMap.put(5865, 173);
         CHANNELS_5GHZ_BAND = Collections.unmodifiableMap(aMap);
+
+		aMap = new HashMap<Integer, Integer>();
+		int channel = 1;
+		for (int i = START_6GHZ_BAND; i <= END_6GHZ_BAND; i += 20) {
+			aMap.put(i, channel);
+			channel += 4;
+		}
+
+		channel = 3;
+		for (int i = 5950; i <= 7070; i += 40) {
+			aMap.put(i, channel);
+			channel += 8;
+		}
+
+		channel = 7;
+		for (int i = 5970; i <= 7010; i += 80) {
+			aMap.put(i, channel);
+			channel += 16;
+		}
+
+		channel = 15;
+		for (int i = 6010; i <= 6970; i += 160) {
+			aMap.put(i, channel);
+			channel += 32;
+		}
+
+		channel = 31;
+		for (int i = 6090; i <= 7050; i += 320) {
+			aMap.put(i, channel);
+			channel += 64;
+		}
+
+		CHANNELS_6GHZ_BAND = Collections.unmodifiableMap(aMap);
     }
+
+	public static FrequencyBand getFrequencyBand(ScanResult sr) {
+		return getFrequencyBand(getFrequencies(sr)[0]);
+	}
 
 	public static FrequencyBand getFrequencyBand(int frequency) {
 		if (CHANNELS_24GHZ_BAND.containsKey(frequency)) {
@@ -156,25 +198,53 @@ public class Util {
 		else if (CHANNELS_5GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.FIVE_GHZ;
 		}
+		else if (CHANNELS_6GHZ_BAND.containsKey(frequency)) {
+			return FrequencyBand.SIX_GHZ;
+		}
 		else {
 			Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
 			return FrequencyBand.UNKNOWN;
 		}
 	}
 	
-	public static int getFrequency(int channel) {
-        for (Entry<Integer, Integer> entry : CHANNELS_24GHZ_BAND.entrySet()) {
-            if (entry.getValue() == channel) {
-            	return entry.getKey();
-            }
-        }
-        for (Entry<Integer, Integer> entry : CHANNELS_5GHZ_BAND.entrySet()) {
-            if (entry.getValue() == channel) {
-            	return entry.getKey();
-            }
-        }
-        
+	public static int getFrequency(FrequencyBand frequencyBand, int channel) {
+    	if (frequencyBand == FrequencyBand.TWO_FOUR_GHZ) {
+			for (Entry<Integer, Integer> entry : CHANNELS_24GHZ_BAND.entrySet()) {
+				if (entry.getValue() == channel) {
+					return entry.getKey();
+				}
+			}
+		}
+    	else if (frequencyBand == FrequencyBand.FIVE_GHZ) {
+			for (Entry<Integer, Integer> entry : CHANNELS_5GHZ_BAND.entrySet()) {
+				if (entry.getValue() == channel) {
+					return entry.getKey();
+				}
+			}
+		}
+		else if (frequencyBand == FrequencyBand.SIX_GHZ) {
+			for (Entry<Integer, Integer> entry : CHANNELS_6GHZ_BAND.entrySet()) {
+				if (entry.getValue() == channel) {
+					return entry.getKey();
+				}
+			}
+		}
+
 		return -1;
+	}
+
+	public static int[] getFrequencies(ScanResult sr) {
+		if (android.os.Build.VERSION.SDK_INT < 23 || sr.channelWidth == ScanResult.CHANNEL_WIDTH_20MHZ) {
+			return new int[] { sr.frequency };
+		}
+		else {
+			if (sr.channelWidth == ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ) {
+				return new int[] { sr.centerFreq0, sr.centerFreq1 };
+			}
+			else {
+				return new int[] { sr.centerFreq0 };
+			}
+		}
 	}
 
 	public static int getChannel(int frequency) {
@@ -183,6 +253,9 @@ public class Util {
 		}
 		else if (CHANNELS_5GHZ_BAND.containsKey(frequency)) {
 			return CHANNELS_5GHZ_BAND.get(frequency);
+		}
+		else if (CHANNELS_6GHZ_BAND.containsKey(frequency)) {
+			return CHANNELS_6GHZ_BAND.get(frequency);
 		}
 		else {
 			return -1;

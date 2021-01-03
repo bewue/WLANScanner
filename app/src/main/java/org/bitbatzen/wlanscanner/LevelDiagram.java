@@ -154,6 +154,16 @@ public abstract class LevelDiagram extends View {
     	float levelHeight = maxLevelHeight * (1 - ((float) Math.abs(dBm) - 30) / 70);
     	return levelHeight;
     }
+
+    protected void drawSSIDLabel(Canvas canvas, WLANDiagramItem wdi, String label) {
+		float levelHeight = getLevelHeight(wdi.dBm);
+		float labelPosY = innerRect.bottom - levelHeight;
+		labelPosY = Math.max(labelPosY - 8, 32);
+		float labelPosX = getXAxisPos(wdi.frequency);
+
+		ssidPaint.setColor(wdi.color);
+		canvas.drawText(label, labelPosX, labelPosY, ssidPaint);
+	}
     
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -212,12 +222,9 @@ public abstract class LevelDiagram extends View {
 	}
 
 	protected void handleWLANDiagramItem(ScanResult sr) {
-		if (android.os.Build.VERSION.SDK_INT >= 23 && sr.channelWidth == ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ) {
-			createWLANDiagramItem(sr.SSID, sr.BSSID, sr.centerFreq0, Util.getChannelWidth(sr), sr.level);
-			createWLANDiagramItem(sr.SSID, sr.BSSID, sr.centerFreq1, Util.getChannelWidth(sr), sr.level);
-		}
-		else {
-			createWLANDiagramItem(sr.SSID, sr.BSSID, sr.frequency, Util.getChannelWidth(sr), sr.level);
+		int[] frequencies = Util.getFrequencies(sr);
+		for (int f : frequencies) {
+			createWLANDiagramItem(sr.SSID, sr.BSSID, f, Util.getChannelWidth(sr), sr.level);
 		}
 	}
 

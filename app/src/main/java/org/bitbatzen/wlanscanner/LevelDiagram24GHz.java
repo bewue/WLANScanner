@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 
 
 public class LevelDiagram24GHz extends LevelDiagram {
-  
+
 	public LevelDiagram24GHz(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 	}
@@ -40,7 +40,7 @@ public class LevelDiagram24GHz extends LevelDiagram {
     public void updateDiagram(ArrayList<ScanResult> scanResults) {
     	wlans.clear();
     	for (ScanResult sr : scanResults) {
-    		if (Util.getFrequencyBand(sr.frequency) == FrequencyBand.TWO_FOUR_GHZ) {
+    		if (Util.getFrequencyBand(sr) == FrequencyBand.TWO_FOUR_GHZ) {
 				handleWLANDiagramItem(sr);
     		}
     	}
@@ -57,9 +57,10 @@ public class LevelDiagram24GHz extends LevelDiagram {
     
     @Override
     public float getXAxisPos(int frequency) {
+		int start = Util.START_24GHZ_BAND - 5;
     	float margin = rowsMarginLeft + rowsMarginRight;
-    	int relFreq = frequency - Util.START_24GHZ_BAND;
-    	int bandWidth = Util.END_24GHZ_BAND - Util.START_24GHZ_BAND;
+    	int relFreq = frequency - start;
+    	int bandWidth = Util.END_24GHZ_BAND - start;
     	float mghzWidth = (innerRect.right - innerRect.left - margin) / bandWidth;
     	
     	return innerRect.left + rowsMarginLeft + mghzWidth * relFreq;
@@ -77,12 +78,7 @@ public class LevelDiagram24GHz extends LevelDiagram {
     @Override
     protected void drawSSIDLabels(Canvas canvas) {
 		for (WLANDiagramItem wdi : wlans) {
-			float levelHeight = getLevelHeight(wdi.dBm);
-			float levelY = innerRect.bottom - levelHeight;
-			float posX = getXAxisPos(wdi.frequency);
-			
-			ssidPaint.setColor(wdi.color);
-			canvas.drawText(wdi.SSID, posX, levelY - 8, ssidPaint);			
+			drawSSIDLabel(canvas, wdi, wdi.SSID);
 		}
     }
  }

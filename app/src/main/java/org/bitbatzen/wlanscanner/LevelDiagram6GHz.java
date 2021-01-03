@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2014 Benjamin W. (bitbatzen@gmail.com)
+ *  Copyright (C) 2020 Benjamin W. (bitbatzen@gmail.com)
  *
  *  This file is part of WLANScanner.
  *
@@ -30,9 +30,9 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 
-public class LevelDiagram5GHz extends LevelDiagram {
-  
-	public LevelDiagram5GHz(Context context, AttributeSet attributeSet) {
+public class LevelDiagram6GHz extends LevelDiagram {
+
+	public LevelDiagram6GHz(Context context, AttributeSet attributeSet) {
 		super(context, attributeSet);
 	}
 
@@ -40,7 +40,7 @@ public class LevelDiagram5GHz extends LevelDiagram {
     public void updateDiagram(ArrayList<ScanResult> scanResults) {
     	wlans.clear();
     	for (ScanResult sr : scanResults) {
-    		if (Util.getFrequencyBand(sr) == FrequencyBand.FIVE_GHZ) {
+    		if (Util.getFrequencyBand(sr) == FrequencyBand.SIX_GHZ) {
 				handleWLANDiagramItem(sr);
     		}
     	}
@@ -57,9 +57,11 @@ public class LevelDiagram5GHz extends LevelDiagram {
     
     @Override
     public float getXAxisPos(int frequency) {
-    	float margin = rowsMarginLeft + rowsMarginRight;
-    	int relFreq = frequency - Util.START_5GHZ_BAND;
-    	int bandWidth = Util.END_5GHZ_BAND - Util.START_5GHZ_BAND;
+		int start 		= Util.START_6GHZ_BAND - 10;
+		int end 		= Util.END_6GHZ_BAND + 10;
+    	float margin 	= rowsMarginLeft + rowsMarginRight;
+    	int relFreq 	= frequency - start;
+    	int bandWidth 	= end - start;
     	float mghzWidth = (innerRect.right - innerRect.left - margin) / bandWidth;
     	
     	return innerRect.left + rowsMarginLeft + mghzWidth * relFreq;
@@ -68,11 +70,11 @@ public class LevelDiagram5GHz extends LevelDiagram {
     @Override
     protected void drawXAxisLabelsAndLines(Canvas canvas) {
 		// x-axis label
-    	String s = Integer.toString(Util.START_5GHZ_BAND) + " - " + Integer.toString(Util.END_5GHZ_BAND) + " MHz";
+    	String s = Integer.toString(Util.START_6GHZ_BAND) + " - " + Integer.toString(Util.END_6GHZ_BAND) + " MHz";
 		canvas.drawText(s, innerRect.left + innerRect.width() / 2, getHeight(), xLabelsPaint);
 		
 		// x-axis lines
-        for (Entry<Integer, Integer> entry : Util.CHANNELS_5GHZ_BAND.entrySet()) {
+        for (Entry<Integer, Integer> entry : Util.CHANNELS_6GHZ_BAND.entrySet()) {
     		float posX = getXAxisPos(entry.getKey());
     		canvas.drawLine(posX, innerRect.bottom, posX, innerRect.top, linesPaint);
         }

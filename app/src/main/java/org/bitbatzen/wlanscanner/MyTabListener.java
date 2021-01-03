@@ -19,8 +19,6 @@
 
 package org.bitbatzen.wlanscanner;
 
-import org.bitbatzen.wlanscanner.R;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Fragment;
@@ -47,6 +45,9 @@ public class MyTabListener implements ActionBar.TabListener {
     	else if (fragment instanceof FragmentDiagram5GHz) {
     		mainActivity.setCurrentFragmentID(MainActivity.FRAGMENT_ID_DIAGRAM_5GHZ);
     	}
+		else if (fragment instanceof FragmentDiagram6GHz) {
+			mainActivity.setCurrentFragmentID(MainActivity.FRAGMENT_ID_DIAGRAM_6GHZ);
+		}
 
 		ft.replace(R.id.activity_main, fragment);
 	}

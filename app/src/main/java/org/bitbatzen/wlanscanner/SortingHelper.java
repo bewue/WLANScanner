@@ -89,7 +89,7 @@ public class SortingHelper {
 				return (v1.level < v2.level);
 
 			case SORTING_OPTION_CHANNEL:
-				return (v1.frequency > v2.frequency);
+				return (Util.getChannel(Util.getFrequencies(v1)[0]) > Util.getChannel(Util.getFrequencies(v2)[0]));
 
 			case SORTING_OPTION_CHANNEL_WIDTH:
 				return (Util.getChannelWidth(v1) > Util.getChannelWidth(v2));
