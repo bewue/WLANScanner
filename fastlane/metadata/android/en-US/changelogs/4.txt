@@ -1,0 +1,1 @@
+- added support for 6 GHz band (+ diagram view)

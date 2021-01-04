@@ -1,0 +1,1 @@
+- Support für 6 GHz Band hinzugefügt (+ Diagramm)
