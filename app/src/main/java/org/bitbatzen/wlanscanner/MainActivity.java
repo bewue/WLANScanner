@@ -521,8 +521,8 @@ public class MainActivity extends Activity implements IEventListener {
 		sr.SSID			= "SSID-3";
 		sr.BSSID		= "cc:2a:65:21:b9:1a";
 		sr.level 		= -51;
-		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 1);
-		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_40MHZ;
+		sr.frequency	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 1);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_20MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS";
 		sr.timestamp	= System.currentTimeMillis();
 		scanResults.add(sr);
@@ -530,7 +530,7 @@ public class MainActivity extends Activity implements IEventListener {
 		sr = new ScanResult();
 		sr.SSID			= "SSID-4";
 		sr.BSSID		= "5a:2b:83:2e:40:f7";
-		sr.level 		= -74;
+		sr.level		= -74;
 		sr.frequency	= Util.getFrequency(Util.FrequencyBand.TWO_FOUR_GHZ, 13);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_20MHZ;
 		sr.capabilities	= "WPA2-PSK-CCMP ESS WPS";
@@ -570,10 +570,20 @@ public class MainActivity extends Activity implements IEventListener {
 		sr = new ScanResult();
 		sr.SSID			= "SSID-8";
 		sr.BSSID		= "34:98:af:33:9f:44";
-		sr.level 		= -55;
+		sr.level 		= -93;
 		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.SIX_GHZ, 39);
 		sr.centerFreq1	= Util.getFrequency(Util.FrequencyBand.SIX_GHZ, 87);
 		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_80MHZ_PLUS_MHZ;
+		sr.capabilities	= "ESS";
+		sr.timestamp	= System.currentTimeMillis();
+		scanResults.add(sr);
+
+		sr = new ScanResult();
+		sr.SSID			= "SSID-9";
+		sr.BSSID		= "e4:e6:66:b3:78:1a";
+		sr.level		= -96;
+		sr.centerFreq0	= Util.getFrequency(Util.FrequencyBand.SIX_GHZ, 17);
+		sr.channelWidth	= ScanResult.CHANNEL_WIDTH_160MHZ;
 		sr.capabilities	= "ESS";
 		sr.timestamp	= System.currentTimeMillis();
 		scanResults.add(sr);
