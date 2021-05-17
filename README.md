@@ -10,3 +10,8 @@ The App features a list view and diagram views for the 2.4 GHz, 5 GHz and 6 GHz 
 
 ## Screenshots
 ![](https://github.com/bewue/Misc/blob/main/Pictures/WLANScanner-Screenshots.png)
+
+## Important Note
+For Android 9 and above, location services must be enabled on the device (under Settings > Location).
+Since Android 8.0 there are new permission requirements to get these scan results. 
+https://developer.android.com/guide/topics/connectivity/wifi-scan#wifi-scan-permissions
