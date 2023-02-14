@@ -354,31 +354,37 @@ public class MainActivity extends Activity implements IEventListener {
 		boolean filterCapabiliEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
 		String filterCapabili			= sharedPrefs.getString(Util.PREF_FILTER_CAPABILI, "");
 
-		if (filterSSIDEnabled && ! sr.SSID.toLowerCase().contains(filterSSID.toLowerCase())) {
-			return false;
+		boolean filterInvertEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_INVERT_ENABLED, false);
+
+		if (! filterSSIDEnabled && ! filterChannelEnabled && ! filterCapabiliEnabled) {
+			return true;
 		}
 
+		boolean isSSIDMatch 	= (filterSSIDEnabled && sr.SSID.toLowerCase().contains(filterSSID.toLowerCase()));
+		boolean isCapabiliMatch	= (filterCapabiliEnabled && sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase()));
+
+		boolean isChannelMatch = false;
 		if (filterChannelEnabled) {
 			int fChannel = Integer.parseInt(filterChannel);
 			int[] frequencies = Util.getFrequencies(sr);
 
-			boolean channelFound = false;
 			for (int f : frequencies) {
 				if (Util.getChannel(f) == fChannel) {
-					channelFound = true;
+					isChannelMatch = true;
+					break;
 				}
 			}
-
-			if (! channelFound) {
-				return false;
-			}
 		}
 
-		if (filterCapabiliEnabled && ! sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase())) {
-			return false;
+		if (filterInvertEnabled) {
+			return ((! filterSSIDEnabled || ! isSSIDMatch)
+					&& (! filterCapabiliEnabled || ! isCapabiliMatch)
+					&& (! filterChannelEnabled || ! isChannelMatch));
+		} else {
+			return ((! filterSSIDEnabled || isSSIDMatch)
+					&& (! filterCapabiliEnabled || isCapabiliMatch)
+					&& (! filterChannelEnabled || isChannelMatch));
 		}
-
-		return true;
 	}
 
 	private void onFilterChanged() {

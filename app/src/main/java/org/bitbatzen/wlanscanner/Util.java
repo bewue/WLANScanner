@@ -45,6 +45,8 @@ public class Util {
 	public static final String PREF_FILTER_CAPABILI_ENABLED	= "PREF_FILTER_CAPABILI_ENABLED";
 	public static final String PREF_FILTER_CAPABILI			= "PREF_FILTER_CAPABILI";
 
+	public static final String PREF_FILTER_INVERT_ENABLED	= "PREF_FILTER_INVERT";
+
 	public static final String PREF_SETTING_SCAN_DELAY		= "PREF_SETTING_SCAN_DELAY";
 
 	public enum FrequencyBand {

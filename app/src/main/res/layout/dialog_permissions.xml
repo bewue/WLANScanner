@@ -26,7 +26,7 @@
             android:id="@+id/button_dialog_ok"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@drawable/buttonselector"
             android:clickable="true"

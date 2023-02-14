@@ -124,6 +124,32 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_invert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="150dp"
+            android:layout_toRightOf="@id/tv_dialog_filter_invert"
+            android:paddingTop="22dp" />
+
+        <TextView
+            android:id="@+id/tv_dialog_filter_invert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="130dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="18dp"
+            android:text="Invert-Match:"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -150,7 +176,7 @@
             android:id="@+id/button_dialog_filter_ok"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
-            android:layout_margin="8dp"
+            android:layout_margin="10dp"
             android:background="@drawable/buttonselector"
             android:clickable="true"
             android:text="Ok"

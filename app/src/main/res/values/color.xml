@@ -4,7 +4,7 @@
 
 	<color name="wlanscanner_error_text">#EB4747</color>
 	
-	<color name="wlanscanner_dialog_bg">#444444</color>
+	<color name="wlanscanner_dialog_bg">#333333</color>
 	<color name="wlanscanner_dialog_header">#dddddd</color>
 	<color name="wlanscanner_dialog_text">#cccccc</color>
 	

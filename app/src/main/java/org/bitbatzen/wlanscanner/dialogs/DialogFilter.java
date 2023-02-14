@@ -55,6 +55,8 @@ public class DialogFilter
 	CheckBox cbFilterCapabiliEnabled;
 	EditText etFilterCapabili;
 
+	CheckBox cbFilterInvertEnabled;
+
 	TextView etFilterInfo;
 
 
@@ -105,6 +107,11 @@ public class DialogFilter
 		String filterCapabili			= sharedPrefs.getString(Util.PREF_FILTER_CAPABILI, "");
 		etFilterCapabili 				= (EditText) findViewById(R.id.et_dialog_filter_capabili);
 		etFilterCapabili.setText(filterCapabili);
+
+		// filter invert
+		boolean filterInvertEnabled		= sharedPrefs.getBoolean(Util.PREF_FILTER_INVERT_ENABLED, false);
+		cbFilterInvertEnabled			= (CheckBox) findViewById(R.id.cb_dialog_filter_invert);
+		cbFilterInvertEnabled.setChecked(filterInvertEnabled);
 
 		etFilterInfo = (TextView) findViewById(R.id.tv_dialog_filter_info);
 	}
@@ -162,6 +169,9 @@ public class DialogFilter
 		// save capabilities filter
 		editor.putBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, filterCapabiliEnabled);
 		editor.putString(Util.PREF_FILTER_CAPABILI, filterCapabili);
+
+		// save invert
+		editor.putBoolean(Util.PREF_FILTER_INVERT_ENABLED, cbFilterInvertEnabled.isChecked());
 
 		editor.commit();
 
