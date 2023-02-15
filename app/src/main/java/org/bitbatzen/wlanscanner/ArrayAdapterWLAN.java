@@ -93,21 +93,6 @@ class ArrayAdapterWLAN extends BaseAdapter {
             levelItem.setBackgroundResource(R.drawable.list_item_level_bg_red);
         }
 
-        // frequency band
-        TextView bandItem = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
-        Util.FrequencyBand fBand = Util.getFrequencyBand(itemData);
-        String text = "";
-        if (fBand == Util.FrequencyBand.TWO_FOUR_GHZ) {
-            text = "2.4 GHz";
-        }
-        else if (fBand == Util.FrequencyBand.FIVE_GHZ) {
-            text = "5 GHz";
-        }
-        else if (fBand == Util.FrequencyBand.SIX_GHZ) {
-            text = "6 GHz";
-        }
-        bandItem.setText(text);
-
         // wlan standard
         TextView wlanStandard = (TextView) view.findViewById(R.id.rowItemWLANStandard);
         String sWlanStandard = Util.getWLANStandard(itemData);
@@ -127,17 +112,35 @@ class ArrayAdapterWLAN extends BaseAdapter {
         }
 
         // channel
-        String channel = "";
+        String channel              = "";
+        String channelFrequencies   = "";
         int[] frequencies = Util.getFrequencies(itemData);
         if (frequencies.length == 1) {
-            channel = String.valueOf(Util.getChannel(frequencies[0]));
+            channel             = String.valueOf(Util.getChannel(frequencies[0]));
+            channelFrequencies  = String.valueOf(frequencies[0]);
         }
         else if (frequencies.length == 2) {
-            channel = Util.getChannel(frequencies[0]) + "+" + Util.getChannel(frequencies[1]);
+            channel             = Util.getChannel(frequencies[0]) + "+" + Util.getChannel(frequencies[1]);
+            channelFrequencies  = frequencies[0] + "+" + frequencies[1];
         }
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
         channelItem.setText(channel);
         channelItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190, parent.getResources().getDisplayMetrics()));
+
+        // frequency band (+ channel frequency(s))
+        TextView bandItem = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
+        Util.FrequencyBand fBand = Util.getFrequencyBand(itemData);
+        String text = "";
+        if (fBand == Util.FrequencyBand.TWO_FOUR_GHZ) {
+            text = "2.4 GHz";
+        }
+        else if (fBand == Util.FrequencyBand.FIVE_GHZ) {
+            text = "5 GHz";
+        }
+        else if (fBand == Util.FrequencyBand.SIX_GHZ) {
+            text = "6 GHz";
+        }
+        bandItem.setText(text + " [" + channelFrequencies + "]");
 
         // bssid (mac)
         TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);
