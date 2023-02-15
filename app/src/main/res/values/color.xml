@@ -7,6 +7,7 @@
 	<color name="wlanscanner_dialog_bg">#333333</color>
 	<color name="wlanscanner_dialog_header">#dddddd</color>
 	<color name="wlanscanner_dialog_text">#cccccc</color>
+	<color name="wlanscanner_dialog_special">#FD41B6D9</color>
 	
 	<color name="wlanscanner_button_text">#bbbbbb</color>
 	<color name="wlanscanner_button_bg">#666666</color>

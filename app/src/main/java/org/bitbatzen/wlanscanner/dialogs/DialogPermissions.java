@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.bitbatzen.wlanscanner.MainActivity;
 import org.bitbatzen.wlanscanner.R;
@@ -39,6 +40,10 @@ public class DialogPermissions
         implements android.view.View.OnClickListener {
 
     public Activity activity;
+
+    public TextView permissionHeader;
+    public TextView permissionInfo;
+    public TextView permissionFooter;
     public Button buttonOk;
 
     public List<String> permissionsToRequest;
@@ -57,6 +62,30 @@ public class DialogPermissions
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_permissions);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        permissionHeader    = (TextView) findViewById(R.id.tv_dialog_permission_header);
+        permissionInfo      = (TextView) findViewById(R.id.tv_dialog_permission_info);
+        permissionFooter    = (TextView) findViewById(R.id.tv_dialog_permission_footer);
+
+        if (android.os.Build.VERSION.SDK_INT < 26) {
+            permissionHeader.setText("The app requires all requested permissions to work properly.");
+            permissionInfo.setVisibility(View.GONE);
+        } else {
+            // API VERSION >= 26
+            String requirements = "";
+            if (android.os.Build.VERSION.SDK_INT >= 26) {
+                permissionHeader.setText("To get scan results the following requirements must be met:");
+                requirements += "• the app has the permission to query the location services";
+            }
+
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                requirements += "\n\n• the location services on the device are enabled (Settings > Location)";
+            }
+            
+            permissionInfo.setText(requirements);
+        }
+
+        permissionFooter.setText("If your system supports it, you can grant the permissions in the next step.");
 
         buttonOk = (Button) findViewById(R.id.button_dialog_ok);
         buttonOk.setOnClickListener(this);

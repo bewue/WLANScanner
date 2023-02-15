@@ -61,15 +61,6 @@
         android:textColor="@color/wlanscanner_dialog_text"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/tv_dialog_about_dev_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:autoLink="email"
-        android:text="@string/dev_email" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

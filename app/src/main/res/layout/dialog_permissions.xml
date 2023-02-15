@@ -6,14 +6,31 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_dialog_permission_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:textSize="16sp" />
+
+    <TextView
         android:id="@+id/tv_dialog_permission_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="The app requires all requested permissions to work properly!"
-        android:textColor="@color/wlanscanner_dialog_header"
-        android:textSize="18sp"></TextView>
+        android:textColor="@color/wlanscanner_dialog_special"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_dialog_permission_footer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
