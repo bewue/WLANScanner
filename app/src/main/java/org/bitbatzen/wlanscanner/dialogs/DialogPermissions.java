@@ -77,11 +77,11 @@ public class DialogPermissions
                 permissionHeader.setText("To get scan results the following requirements must be met:");
                 requirements += "• the app has the permission to query the location services";
             }
-
+            
             if (android.os.Build.VERSION.SDK_INT >= 29) {
                 requirements += "\n\n• the location services on the device are enabled (Settings > Location)";
             }
-            
+
             permissionInfo.setText(requirements);
         }
 
