@@ -16,15 +16,47 @@
         android:textSize="20sp"
         android:textStyle="bold"></TextView>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="16dp" >
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_24_ghz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:text="2.4 GHz" />
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_5_ghz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:text="5 GHz" />
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_6_ghz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:text="6 GHz" />
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/tv_dialog_filter_ssid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="130dp"
+            android:width="135dp"
             android:paddingLeft="10dp"
             android:paddingTop="18dp"
             android:text="SSID (contains):"
@@ -36,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_dialog_filter_ssid"
-            android:width="145dp"
+            android:width="140dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:textColor="@color/wlanscanner_dialog_text"
@@ -58,10 +90,47 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/tv_dialog_filter_bssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="135dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="18dp"
+            android:text="BSSID (contains):"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_dialog_filter_bssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_dialog_filter_bssid"
+            android:width="140dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textColorHint="@color/wlanscanner_list_item_color1" />
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_bssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/et_dialog_filter_bssid"
+            android:paddingTop="22dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
             android:id="@+id/tv_dialog_filter_channel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="130dp"
+            android:width="135dp"
             android:paddingLeft="10dp"
             android:paddingTop="18dp"
             android:text="Channel:"
@@ -73,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_dialog_filter_channel"
-            android:width="145dp"
+            android:width="140dp"
             android:ems="10"
             android:inputType="numberDecimal"
             android:numeric="integer"
@@ -94,6 +163,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/tv_dialog_filter_capabili"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="135dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="18dp"
+            android:text="Capabilities:"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_dialog_filter_capabili"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_dialog_filter_capabili"
+            android:width="140dp"
+            android:ems="10"
+            android:textColor="@color/wlanscanner_dialog_text" />
+
         <CheckBox
             android:id="@+id/cb_dialog_filter_capabili"
             android:layout_width="wrap_content"
@@ -103,64 +192,33 @@
             android:layout_toRightOf="@id/et_dialog_filter_capabili"
             android:paddingTop="22dp" />
 
-        <EditText
-            android:id="@+id/et_dialog_filter_capabili"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_dialog_filter_capabili"
-            android:width="145dp"
-            android:ems="10"
-            android:textColor="@color/wlanscanner_dialog_text" />
-
-        <TextView
-            android:id="@+id/tv_dialog_filter_capabili"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="130dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="18dp"
-            android:text="Capabilities:"
-            android:textColor="@color/wlanscanner_dialog_text"
-            android:textSize="16sp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="16dp" >
 
         <CheckBox
             android:id="@+id/cb_dialog_filter_invert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="150dp"
-            android:layout_toRightOf="@id/tv_dialog_filter_invert"
-            android:paddingTop="22dp" />
-
-        <TextView
-            android:id="@+id/tv_dialog_filter_invert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="130dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="18dp"
-            android:text="Invert-Match:"
-            android:textColor="@color/wlanscanner_dialog_text"
-            android:textSize="16sp" />
+            android:layout_marginLeft="15dp"
+            android:text="Invert Match"
+            android:textColor="@color/wlanscanner_dialog_text" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_gravity="center" >
 
         <TextView
             android:id="@+id/tv_dialog_filter_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
+            android:paddingLeft="10dp"
             android:textColor="@color/wlanscanner_error_text"
             android:textSize="16sp" />
     </LinearLayout>

@@ -46,8 +46,15 @@ public class DialogFilter
 	public Activity activity;
 	public Button buttonOk;
 
+	CheckBox cbFilter24GHzEnabled;
+	CheckBox cbFilter5GHzEnabled;
+	CheckBox cbFilter6GHzEnabled;
+
 	CheckBox cbFilterSSIDEnabled;
 	EditText etFilterSSID;
+
+	CheckBox cbFilterBSSIDEnabled;
+	EditText etFilterBSSID;
 
 	CheckBox cbFilterChannelEnabled;
 	EditText etFilterChannel;
@@ -78,32 +85,53 @@ public class DialogFilter
 
 		SharedPreferences sharedPrefs = activity.getPreferences(Context.MODE_PRIVATE);
 
-		// filter ssid enabled
+		// filter 2.4 GHz enabled
+		boolean filter24GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_24GHZ_ENABLED, true);
+		cbFilter24GHzEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_24_ghz);
+		cbFilter24GHzEnabled.setChecked(filter24GHzEnabled);
+
+		// filter 5 GHz enabled
+		boolean filter5GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_5GHZ_ENABLED, true);
+		cbFilter5GHzEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_5_ghz);
+		cbFilter5GHzEnabled.setChecked(filter5GHzEnabled);
+
+		// filter 6 GHz enabled
+		boolean filter6GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_6GHZ_ENABLED, true);
+		cbFilter6GHzEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_6_ghz);
+		cbFilter6GHzEnabled.setChecked(filter6GHzEnabled);
+
+		// filter ssid
 		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
 		cbFilterSSIDEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_ssid);
 		cbFilterSSIDEnabled.setChecked(filterSSIDEnabled);
 
-		// filter ssid
 		String filterSSID 				= sharedPrefs.getString(Util.PREF_FILTER_SSID, "");
 		etFilterSSID 					= (EditText) findViewById(R.id.et_dialog_filter_ssid);
 		etFilterSSID.setText(filterSSID);
 
-		// filter channel enabled
+		// filter bssid
+		boolean filterBSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_BSSID_ENABLED, false);
+		cbFilterBSSIDEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_bssid);
+		cbFilterBSSIDEnabled.setChecked(filterBSSIDEnabled);
+
+		String filterBSSID 				= sharedPrefs.getString(Util.PREF_FILTER_BSSID, "");
+		etFilterBSSID 					= (EditText) findViewById(R.id.et_dialog_filter_bssid);
+		etFilterBSSID.setText(filterBSSID);
+
+		// filter channel
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 		cbFilterChannelEnabled 			= (CheckBox) findViewById(R.id.cb_dialog_filter_channel);
 		cbFilterChannelEnabled.setChecked(filterChannelEnabled);
 
-		// filter channel
 		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
 		etFilterChannel 				= (EditText) findViewById(R.id.et_dialog_filter_channel);
 		etFilterChannel.setText(filterChannel);
 
-		// filter capabili enabled
+		// filter capabili
 		boolean filterCapabiliEnabled	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
 		cbFilterCapabiliEnabled			= (CheckBox) findViewById(R.id.cb_dialog_filter_capabili);
 		cbFilterCapabiliEnabled.setChecked(filterCapabiliEnabled);
 
-		// filter capabili
 		String filterCapabili			= sharedPrefs.getString(Util.PREF_FILTER_CAPABILI, "");
 		etFilterCapabili 				= (EditText) findViewById(R.id.et_dialog_filter_capabili);
 		etFilterCapabili.setText(filterCapabili);
@@ -119,23 +147,44 @@ public class DialogFilter
 	public void onClickOk() {
 		SharedPreferences.Editor editor = activity.getPreferences(Context.MODE_PRIVATE).edit();
 
+		// band filters (2.4 GHz, 5 GHz, 6 GHz)
+		if (! cbFilter24GHzEnabled.isChecked() && ! cbFilter5GHzEnabled.isChecked() && ! cbFilter6GHzEnabled.isChecked()) {
+			etFilterInfo.setText("At least one of the band filters (2.4 GHz, 5 GHz, 6 GHz) must be selected!");
+			return;
+		}
+
+		editor.putBoolean(Util.PREF_FILTER_24GHZ_ENABLED, cbFilter24GHzEnabled.isChecked());
+		editor.putBoolean(Util.PREF_FILTER_5GHZ_ENABLED, cbFilter5GHzEnabled.isChecked());
+		editor.putBoolean(Util.PREF_FILTER_6GHZ_ENABLED, cbFilter6GHzEnabled.isChecked());
+
+		// ssid filter
 		boolean filterSSIDEnabled		= cbFilterSSIDEnabled.isChecked();
 		String filterSSID 				= etFilterSSID.getText().toString();
 
-		// validate ssid filter
 		if (filterSSIDEnabled && filterSSID.equals("")) {
 			etFilterInfo.setText("Invalid SSID filter!");
 			return;
 		}
 
-		// save ssid filter
 		editor.putBoolean(Util.PREF_FILTER_SSID_ENABLED, filterSSIDEnabled);
 		editor.putString(Util.PREF_FILTER_SSID, filterSSID);
 
+		// bssid filter
+		boolean filterBSSIDEnabled	= cbFilterBSSIDEnabled.isChecked();
+		String filterBSSID 			= etFilterBSSID.getText().toString();
+
+		if (filterBSSIDEnabled && filterBSSID.equals("")) {
+			etFilterInfo.setText("Invalid BSSID filter!");
+			return;
+		}
+
+		editor.putBoolean(Util.PREF_FILTER_BSSID_ENABLED, filterBSSIDEnabled);
+		editor.putString(Util.PREF_FILTER_BSSID, filterBSSID);
+
+		//  channel filter
 		boolean filterChannelEnabled	= cbFilterChannelEnabled.isChecked();
 		String filterChannel			= etFilterChannel.getText().toString();
 
-		// validate channel filter
 		if (filterChannelEnabled) {
 			int fChannel = -1;
 			try {
@@ -153,24 +202,22 @@ public class DialogFilter
 			}
 		}
 
-		// save channel filter
 		editor.putBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, filterChannelEnabled);
 		editor.putString(Util.PREF_FILTER_CHANNEL, filterChannel);
 
+		// capabilities filter
 		boolean filterCapabiliEnabled	= cbFilterCapabiliEnabled.isChecked();
 		String filterCapabili			= etFilterCapabili.getText().toString();
 
-		// validate capabilities filter
 		if (filterCapabiliEnabled && filterCapabili.equals("")) {
 			etFilterInfo.setText("Invalid capabilities filter!");
 			return;
 		}
 
-		// save capabilities filter
 		editor.putBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, filterCapabiliEnabled);
 		editor.putString(Util.PREF_FILTER_CAPABILI, filterCapabili);
 
-		// save invert
+		// invert option
 		editor.putBoolean(Util.PREF_FILTER_INVERT_ENABLED, cbFilterInvertEnabled.isChecked());
 
 		editor.commit();

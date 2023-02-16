@@ -45,6 +45,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.util.Log;
 
 import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
 import org.bitbatzen.wlanscanner.dialogs.DialogFilter;
@@ -345,8 +346,15 @@ public class MainActivity extends Activity implements IEventListener {
 	private boolean checkFilter(ScanResult sr) {
 		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
 
+		boolean filter24GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_24GHZ_ENABLED, true);
+		boolean filter5GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_5GHZ_ENABLED, true);
+		boolean filter6GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_6GHZ_ENABLED, true);
+
 		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
 		String filterSSID 				= sharedPrefs.getString(Util.PREF_FILTER_SSID, "");
+
+		boolean filterBSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_BSSID_ENABLED, false);
+		String filterBSSID 				= sharedPrefs.getString(Util.PREF_FILTER_BSSID, "");
 
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
@@ -356,13 +364,21 @@ public class MainActivity extends Activity implements IEventListener {
 
 		boolean filterInvertEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_INVERT_ENABLED, false);
 
-		if (! filterSSIDEnabled && ! filterChannelEnabled && ! filterCapabiliEnabled) {
+		if (filter24GHzEnabled && filter5GHzEnabled && filter6GHzEnabled
+				&& ! filterSSIDEnabled && ! filterBSSIDEnabled && ! filterChannelEnabled && ! filterCapabiliEnabled) {
+
 			return true;
 		}
 
-		boolean isSSIDMatch 	= (filterSSIDEnabled && sr.SSID.toLowerCase().contains(filterSSID.toLowerCase()));
-		boolean isCapabiliMatch	= (filterCapabiliEnabled && sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase()));
+		Util.FrequencyBand fb 	= Util.getFrequencyBand(sr);
+		boolean is24GHzMatch 	= (filter24GHzEnabled && fb == Util.FrequencyBand.TWO_FOUR_GHZ);
+		boolean is5GHzMatch 	= (filter5GHzEnabled && fb == Util.FrequencyBand.FIVE_GHZ);
+		boolean is6GHzMatch 	= (filter6GHzEnabled && fb == Util.FrequencyBand.SIX_GHZ);
 
+		boolean isSSIDMatch 	= (filterSSIDEnabled && sr.SSID.toLowerCase().contains(filterSSID.toLowerCase()));
+		boolean isBSSIDMatch 	= (filterBSSIDEnabled && sr.BSSID.toLowerCase().contains(filterBSSID.toLowerCase()));
+		boolean isCapabiliMatch	= (filterCapabiliEnabled && sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase()));
+		
 		boolean isChannelMatch = false;
 		if (filterChannelEnabled) {
 			int fChannel = Integer.parseInt(filterChannel);
@@ -377,11 +393,15 @@ public class MainActivity extends Activity implements IEventListener {
 		}
 
 		if (filterInvertEnabled) {
-			return ((! filterSSIDEnabled || ! isSSIDMatch)
+			return ((is24GHzMatch || is5GHzMatch || is6GHzMatch)
+					&& (! filterSSIDEnabled || ! isSSIDMatch)
+					&& (! filterBSSIDEnabled || ! isBSSIDMatch)
 					&& (! filterCapabiliEnabled || ! isCapabiliMatch)
 					&& (! filterChannelEnabled || ! isChannelMatch));
 		} else {
-			return ((! filterSSIDEnabled || isSSIDMatch)
+			return ((is24GHzMatch || is5GHzMatch || is6GHzMatch)
+					&& (! filterSSIDEnabled || isSSIDMatch)
+					&& (! filterBSSIDEnabled || isBSSIDMatch)
 					&& (! filterCapabiliEnabled || isCapabiliMatch)
 					&& (! filterChannelEnabled || isChannelMatch));
 		}
@@ -403,11 +423,18 @@ public class MainActivity extends Activity implements IEventListener {
 
 	private void updateFilterButton() {
 		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
+		boolean filter24GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_24GHZ_ENABLED, true);
+		boolean filter5GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_5GHZ_ENABLED, true);
+		boolean filter6GHzEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_6GHZ_ENABLED, true);
+
 		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
+		boolean filterBSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_BSSID_ENABLED, false);
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 		boolean filterCapabiliEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
 
-		if (filterSSIDEnabled || filterChannelEnabled || filterCapabiliEnabled) {
+		if (! filter24GHzEnabled || ! filter5GHzEnabled || ! filter6GHzEnabled
+				|| filterSSIDEnabled || filterBSSIDEnabled || filterChannelEnabled || filterCapabiliEnabled) {
+
 			buttonFilter.setIcon(R.drawable.ic_filter_active);
 		}
 		else {

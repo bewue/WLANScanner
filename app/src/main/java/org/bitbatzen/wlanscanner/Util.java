@@ -36,8 +36,15 @@ public class Util {
 	public static final String PREF_WLAN_ENABLED_BY_APP		= "PREF_WLAN_ENABLED_BY_APP";
 	public static final String PREF_SELECTED_TAB			= "PREF_SELECTED_TAB";
 
+	public static final String PREF_FILTER_24GHZ_ENABLED	= "PREF_FILTER_24GHZ_ENABLED";
+	public static final String PREF_FILTER_5GHZ_ENABLED		= "PREF_FILTER_5GHZ_ENABLED";
+	public static final String PREF_FILTER_6GHZ_ENABLED		= "PREF_FILTER_6GHZ_ENABLED";
+
 	public static final String PREF_FILTER_SSID_ENABLED		= "PREF_FILTER_SSID_ENABLED";
 	public static final String PREF_FILTER_SSID				= "PREF_FILTER_SSID";
+
+	public static final String PREF_FILTER_BSSID_ENABLED	= "PREF_FILTER_BSSID_ENABLED";
+	public static final String PREF_FILTER_BSSID			= "PREF_FILTER_BSSID";
 
 	public static final String PREF_FILTER_CHANNEL_ENABLED	= "PREF_FILTER_CHANNEL_ENABLED";
 	public static final String PREF_FILTER_CHANNEL			= "PREF_FILTER_CHANNEL";
@@ -196,17 +203,14 @@ public class Util {
 	public static FrequencyBand getFrequencyBand(int frequency) {
 		if (CHANNELS_24GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.TWO_FOUR_GHZ;
-		}
-		else if (CHANNELS_5GHZ_BAND.containsKey(frequency)) {
+		} else if (CHANNELS_5GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.FIVE_GHZ;
-		}
-		else if (CHANNELS_6GHZ_BAND.containsKey(frequency)) {
+		} else if (CHANNELS_6GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.SIX_GHZ;
 		}
-		else {
-			Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
-			return FrequencyBand.UNKNOWN;
-		}
+
+		Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
+		return FrequencyBand.UNKNOWN;
 	}
 	
 	public static int getFrequency(FrequencyBand frequencyBand, int channel) {
@@ -279,10 +283,16 @@ public class Util {
 				return 80;
 			case ScanResult.CHANNEL_WIDTH_160MHZ:
 				return 160;
-			default:
-				Log.w("", "Util.getChannelWidth() -- Unknown Channel Width ID: " + sr.channelWidth);
-				return 20;
 		}
+
+		if (android.os.Build.VERSION.SDK_INT >= 33) {
+			if (sr.channelWidth == ScanResult.CHANNEL_WIDTH_320MHZ) {
+				return 320;
+			}
+		}
+
+		Log.w("", "Util.getChannelWidth() -- Unknown Channel Width ID: " + sr.channelWidth);
+		return 20;
 	}
 
 	public static String getWLANStandard(ScanResult sr) {
@@ -301,10 +311,22 @@ public class Util {
 				return "ac";
 			case ScanResult.WIFI_STANDARD_11AX:
 				return "ax";
-			default:
-				Log.w("", "Util.getWLANStandard() -- Unknown WLAN Standard ID: " + wlanStandard);
-				return "";
 		}
+
+		if (android.os.Build.VERSION.SDK_INT >= 31) {
+			if (wlanStandard == ScanResult.WIFI_STANDARD_11AD) {
+				return "ad";
+			}
+		}
+
+		if (android.os.Build.VERSION.SDK_INT >= 33) {
+			if (wlanStandard == ScanResult.WIFI_STANDARD_11BE) {
+				return "be";
+			}
+		}
+
+		Log.w("", "Util.getWLANStandard() -- Unknown WLAN Standard ID: " + wlanStandard);
+		return "";
 	}
 
 	public static int getDefaultScanDelay() {
