@@ -45,7 +45,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.util.Log;
 
 import org.bitbatzen.wlanscanner.dialogs.DialogAbout;
 import org.bitbatzen.wlanscanner.dialogs.DialogFilter;
@@ -147,21 +146,23 @@ public class MainActivity extends Activity implements IEventListener {
     	fragmentDiagram5GHz 	= new FragmentDiagram5GHz();
 		fragmentDiagram6GHz 	= new FragmentDiagram6GHz();
 
-        tab1 = actionBar.newTab().setText("List");
+        tab1 = actionBar.newTab();
         tab1.setTabListener(new MyTabListener(this, fragmentWLANList));
-        actionBar.addTab(tab1, 0, currentFragmentID == FRAGMENT_ID_WLANLIST);
+        actionBar.addTab(tab1, FRAGMENT_ID_WLANLIST);
 
-        tab2 = actionBar.newTab().setText("2.4 GHz");
+        tab2 = actionBar.newTab();
         tab2.setTabListener(new MyTabListener(this, fragmentDiagram24GHz));
-        actionBar.addTab(tab2, 1, currentFragmentID == FRAGMENT_ID_DIAGRAM_24GHZ);
+        actionBar.addTab(tab2, FRAGMENT_ID_DIAGRAM_24GHZ);
 
-        tab3 = actionBar.newTab().setText("5 GHz");
+        tab3 = actionBar.newTab();
         tab3.setTabListener(new MyTabListener(this, fragmentDiagram5GHz));
-        actionBar.addTab(tab3, 2, currentFragmentID == FRAGMENT_ID_DIAGRAM_5GHZ);
+        actionBar.addTab(tab3, FRAGMENT_ID_DIAGRAM_5GHZ);
 
-		tab4 = actionBar.newTab().setText("6 GHz");
+		tab4 = actionBar.newTab();
 		tab4.setTabListener(new MyTabListener(this, fragmentDiagram6GHz));
-		actionBar.addTab(tab4, 3, currentFragmentID == FRAGMENT_ID_DIAGRAM_6GHZ);
+		actionBar.addTab(tab4, FRAGMENT_ID_DIAGRAM_6GHZ);
+
+		updateTabTitles(new ArrayList<ScanResult>());
 
 		ivPauseButton = new ImageView(MainActivity.this);
 		ivPauseButton.setImageResource(R.drawable.ic_pause);
@@ -297,7 +298,7 @@ public class MainActivity extends Activity implements IEventListener {
 	}
 
 	private void onReceivedScanResults() {
-		if (!scanEnabled) {
+		if (! scanEnabled) {
 			return;
 		}
 
@@ -329,6 +330,8 @@ public class MainActivity extends Activity implements IEventListener {
 			}
     	}
 
+		updateTabTitles(scanResultListFiltered);
+
     	Animation anim = ivRefreshIndicator.getAnimation();
     	if (anim == null || (anim != null && anim.hasEnded())) {
 	    	ivRefreshIndicator.setVisibility(View.VISIBLE);
@@ -341,6 +344,13 @@ public class MainActivity extends Activity implements IEventListener {
 
     	lastScanResultReceivedTime = System.currentTimeMillis();
 		requestScan();
+	}
+
+	private void updateTabTitles(ArrayList<ScanResult> scanResults) {
+		getActionBar().getTabAt(MainActivity.FRAGMENT_ID_WLANLIST).setText("List  (" + Util.getScanResults(scanResults, null).size() + ")");
+		getActionBar().getTabAt(MainActivity.FRAGMENT_ID_DIAGRAM_24GHZ).setText("2.4  (" + Util.getScanResults(scanResults, Util.FrequencyBand.TWO_FOUR_GHZ).size() + ")");
+		getActionBar().getTabAt(MainActivity.FRAGMENT_ID_DIAGRAM_5GHZ).setText("5  (" + Util.getScanResults(scanResults, Util.FrequencyBand.FIVE_GHZ).size() + ")");
+		getActionBar().getTabAt(MainActivity.FRAGMENT_ID_DIAGRAM_6GHZ).setText("6  (" + Util.getScanResults(scanResults, Util.FrequencyBand.SIX_GHZ).size() + ")");
 	}
 
 	private boolean checkFilter(ScanResult sr) {
@@ -378,7 +388,7 @@ public class MainActivity extends Activity implements IEventListener {
 		boolean isSSIDMatch 	= (filterSSIDEnabled && sr.SSID.toLowerCase().contains(filterSSID.toLowerCase()));
 		boolean isBSSIDMatch 	= (filterBSSIDEnabled && sr.BSSID.toLowerCase().contains(filterBSSID.toLowerCase()));
 		boolean isCapabiliMatch	= (filterCapabiliEnabled && sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase()));
-		
+
 		boolean isChannelMatch = false;
 		if (filterChannelEnabled) {
 			int fChannel = Integer.parseInt(filterChannel);
@@ -417,6 +427,7 @@ public class MainActivity extends Activity implements IEventListener {
 		}
 
 		scanResultListFiltered = mList;
+		updateTabTitles(scanResultListFiltered);
 		updateFilterButton();
 		EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
 	}
@@ -494,6 +505,10 @@ public class MainActivity extends Activity implements IEventListener {
 				}
 			}
 		}, delay);
+	}
+
+	public long getLastScanResultReceivedTime() {
+		return lastScanResultReceivedTime;
 	}
 
 	public void setCurrentFragmentID(int fragmentID) {

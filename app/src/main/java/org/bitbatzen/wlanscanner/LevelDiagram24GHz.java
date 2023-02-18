@@ -26,7 +26,6 @@ import android.util.AttributeSet;
 
 import org.bitbatzen.wlanscanner.Util.FrequencyBand;
 
-import java.util.ArrayList;
 import java.util.Map.Entry;
 
 
@@ -37,14 +36,14 @@ public class LevelDiagram24GHz extends LevelDiagram {
 	}
 
 	@Override
-    public void updateDiagram(ArrayList<ScanResult> scanResults) {
+    public void updateDiagram(MainActivity mainActivity) {
     	wlans.clear();
-    	for (ScanResult sr : scanResults) {
+    	for (ScanResult sr : mainActivity.getScanResults()) {
     		if (Util.getFrequencyBand(sr) == FrequencyBand.TWO_FOUR_GHZ) {
 				handleWLANDiagramItem(sr);
     		}
     	}
-    	
+
     	invalidate();
     }
     

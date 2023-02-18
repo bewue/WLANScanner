@@ -51,9 +51,12 @@ public class FragmentDiagram5GHz
 		View view = inflater.inflate(R.layout.fragment_wlan_diagram_5ghz, container, false);
 		
         levelDiagram = (LevelDiagram5GHz) view.findViewById(R.id.levelDiagram5GHz);
-        levelDiagram.updateDiagram(mainActivity.getScanResults());
+        levelDiagram.updateDiagram(mainActivity);
 
         getActivity().invalidateOptionsMenu();
+
+		mainActivity = (MainActivity) getActivity();
+		mainActivity.setCurrentFragmentID(mainActivity.FRAGMENT_ID_DIAGRAM_5GHZ);
 		
 		return view;
 	}
@@ -62,7 +65,7 @@ public class FragmentDiagram5GHz
 	public void handleEvent(EventID eventID) {
 		switch (eventID) {
 		case SCAN_RESULT_CHANGED:
-			levelDiagram.updateDiagram(mainActivity.getScanResults());
+			levelDiagram.updateDiagram(mainActivity);
 			break;
 		default:
 			break;

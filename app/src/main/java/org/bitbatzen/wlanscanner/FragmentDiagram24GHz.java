@@ -19,16 +19,16 @@
 
 package org.bitbatzen.wlanscanner;
 
-import org.bitbatzen.wlanscanner.events.EventManager;
-import org.bitbatzen.wlanscanner.events.IEventListener;
-import org.bitbatzen.wlanscanner.events.Events.EventID;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.bitbatzen.wlanscanner.events.EventManager;
+import org.bitbatzen.wlanscanner.events.Events.EventID;
+import org.bitbatzen.wlanscanner.events.IEventListener;
 
 
 public class FragmentDiagram24GHz 
@@ -51,9 +51,12 @@ public class FragmentDiagram24GHz
 		View view = inflater.inflate(R.layout.fragment_wlan_diagram_2_4ghz, container, false);
 		
         levelDiagram = (LevelDiagram24GHz) view.findViewById(R.id.levelDiagram24GHz);
-        levelDiagram.updateDiagram(mainActivity.getScanResults());
+        levelDiagram.updateDiagram(mainActivity);
 
         getActivity().invalidateOptionsMenu();
+
+		mainActivity = (MainActivity) getActivity();
+		mainActivity.setCurrentFragmentID(mainActivity.FRAGMENT_ID_DIAGRAM_24GHZ);
         
 		return view;
 	}
@@ -62,7 +65,7 @@ public class FragmentDiagram24GHz
 	public void handleEvent(EventID eventID) {
 		switch (eventID) {
 		case SCAN_RESULT_CHANGED:
-			levelDiagram.updateDiagram(mainActivity.getScanResults());
+			levelDiagram.updateDiagram(mainActivity);
 			break;
 		default:
 			break;

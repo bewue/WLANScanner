@@ -103,7 +103,10 @@ public class FragmentWLANList
         updateWLANList();
         
         getActivity().invalidateOptionsMenu();
-        
+
+		mainActivity = (MainActivity) getActivity();
+		mainActivity.setCurrentFragmentID(mainActivity.FRAGMENT_ID_WLANLIST);
+
 		return view;
     }
 
@@ -125,7 +128,7 @@ public class FragmentWLANList
     	for (ScanResult sr : scanResults) {
     		scanResultList.add(sr);
     	}
-    	
+
     	SortingHelper.sort(scanResultList, currentSortingOption);
         wlanAdapter.notifyDataSetChanged();   
     }

@@ -36,19 +36,6 @@ public class MyTabListener implements ActionBar.TabListener {
 	}
 	
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-    	if (fragment instanceof FragmentWLANList) {
-    		mainActivity.setCurrentFragmentID(MainActivity.FRAGMENT_ID_WLANLIST);
-    	}
-    	else if (fragment instanceof FragmentDiagram24GHz) {
-    		mainActivity.setCurrentFragmentID(MainActivity.FRAGMENT_ID_DIAGRAM_24GHZ);
-    	}
-    	else if (fragment instanceof FragmentDiagram5GHz) {
-    		mainActivity.setCurrentFragmentID(MainActivity.FRAGMENT_ID_DIAGRAM_5GHZ);
-    	}
-		else if (fragment instanceof FragmentDiagram6GHz) {
-			mainActivity.setCurrentFragmentID(MainActivity.FRAGMENT_ID_DIAGRAM_6GHZ);
-		}
-
 		ft.replace(R.id.activity_main, fragment);
 	}
 	

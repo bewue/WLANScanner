@@ -26,7 +26,6 @@ import android.util.AttributeSet;
 
 import org.bitbatzen.wlanscanner.Util.FrequencyBand;
 
-import java.util.ArrayList;
 import java.util.Map.Entry;
 
 
@@ -37,14 +36,14 @@ public class LevelDiagram6GHz extends LevelDiagram {
 	}
 
 	@Override
-    public void updateDiagram(ArrayList<ScanResult> scanResults) {
-    	wlans.clear();
-    	for (ScanResult sr : scanResults) {
+    public void updateDiagram(MainActivity mainActivity) {
+		wlans.clear();
+    	for (ScanResult sr : mainActivity.getScanResults()) {
     		if (Util.getFrequencyBand(sr) == FrequencyBand.SIX_GHZ) {
 				handleWLANDiagramItem(sr);
     		}
     	}
-    	
+
     	invalidate();
     }
     

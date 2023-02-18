@@ -59,7 +59,7 @@ public abstract class LevelDiagram extends View {
 	protected float rowsMarginLeft = 20;
 	protected float rowsMarginRight = 20;
 
-    abstract public void updateDiagram(ArrayList<ScanResult> scanResults);
+    abstract public void updateDiagram(MainActivity mainActivity);
     abstract public float getXAxisPos(int frequency);
     abstract void drawXAxisLabelsAndLines(Canvas canvas);
     abstract void drawSSIDLabels(Canvas canvas);

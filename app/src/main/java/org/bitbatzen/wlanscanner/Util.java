@@ -19,10 +19,11 @@
 
 package org.bitbatzen.wlanscanner;
 
-import android.net.wifi.ScanResult;
 import android.graphics.Color;
+import android.net.wifi.ScanResult;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -211,6 +212,18 @@ public class Util {
 
 		Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
 		return FrequencyBand.UNKNOWN;
+	}
+	
+	public static ArrayList<ScanResult> getScanResults(ArrayList<ScanResult> scanResults, FrequencyBand fb) {
+		ArrayList<ScanResult> fbScanResults = new ArrayList<>();
+
+		for (ScanResult sr : scanResults) {
+			if (Util.getFrequencyBand(sr) == fb) {
+				fbScanResults.add(sr);
+			}
+		}
+
+		return fbScanResults;
 	}
 	
 	public static int getFrequency(FrequencyBand frequencyBand, int channel) {
