@@ -5,5 +5,4 @@
 	android:gravity="left"
 	android:padding="10dp"
 	android:textColor="@color/wlanscanner_button_text"
-	android:textSize="14sp"
-	android:textStyle="bold" />
+	android:textSize="16sp" />

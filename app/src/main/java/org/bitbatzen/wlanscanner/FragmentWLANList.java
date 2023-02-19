@@ -26,6 +26,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.bitbatzen.wlanscanner.events.EventManager;
 import org.bitbatzen.wlanscanner.events.Events.EventID;
@@ -42,6 +44,8 @@ import org.bitbatzen.wlanscanner.events.IEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 @TargetApi(29)
@@ -50,13 +54,17 @@ public class FragmentWLANList
 		implements OnItemClickListener, OnItemSelectedListener, IEventListener {
   
     private ListView lv;
-    private ArrayList<ScanResult> scanResultList;
-    private ArrayAdapterWLAN wlanAdapter;
+    private ArrayList<ScanResult> scanResults;
+	boolean scanResultsInProgress = false;
+    private ArrayAdapterWLAN arrayAdapter;
     private Spinner sortingSpinner;
     private SortingHelper sortingHelper;
     private int currentSortingOption;
-    
-    private MainActivity mainActivity;
+
+	private TextView tvLastScanResults;
+	private TextView tvLatestScanResult;
+
+	private MainActivity mainActivity;
 
     
     @Override
@@ -76,36 +84,36 @@ public class FragmentWLANList
         sortingSpinner = (Spinner) view.findViewById(R.id.spinnerSorting);
     	List<String> list = new ArrayList<String>();
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_LEVEL));
-    	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL));
+		list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL));
 		list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_CHANNEL_WIDTH));
     	list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_SSID));
-		if (android.os.Build.VERSION.SDK_INT >= 30) {
-			list.add(sortingHelper.getSortingOptionName(SortingHelper.SORTING_OPTION_WLAN_STANDARD));
-		}
 
-    	ArrayAdapter<String> sortingAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, list);
+    	ArrayAdapter<String> sortingAdapter = new ArrayAdapter<String>(mainActivity, R.layout.spinner_item, list);
 		sortingSpinner.setAdapter(sortingAdapter);
 		sortingSpinner.setOnItemSelectedListener(this);
 		
-		SharedPreferences sharedPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
-        currentSortingOption = sharedPrefs.getInt(Util.PREF_SORTING_OPTION, SortingHelper.SORTING_OPTION_LEVEL);
-		int spinnerPosition = sortingAdapter.getPosition(sortingHelper.getSortingOptionName(currentSortingOption));
+		SharedPreferences sharedPrefs 	= mainActivity.getPreferences(Context.MODE_PRIVATE);
+        currentSortingOption 			= sharedPrefs.getInt(Util.PREF_SORTING_OPTION, SortingHelper.SORTING_OPTION_LEVEL);
+		int spinnerPosition 			= sortingAdapter.getPosition(sortingHelper.getSortingOptionName(currentSortingOption));
 		sortingSpinner.setSelection(spinnerPosition);
         
         lv = (ListView) view.findViewById(R.id.list);
         lv.setOnItemClickListener(this);
         
-        scanResultList = new ArrayList<ScanResult>();
+        scanResults = new ArrayList<ScanResult>();
         
-        wlanAdapter = new ArrayAdapterWLAN(getActivity(), scanResultList);
-        lv.setAdapter(wlanAdapter);
+        arrayAdapter = new ArrayAdapterWLAN(mainActivity, scanResults);
+        lv.setAdapter(arrayAdapter);
 
         updateWLANList();
-        
-        getActivity().invalidateOptionsMenu();
 
-		mainActivity = (MainActivity) getActivity();
+		mainActivity.invalidateOptionsMenu();
 		mainActivity.setCurrentFragmentID(mainActivity.FRAGMENT_ID_WLANLIST);
+
+		tvLastScanResults = (TextView) view.findViewById(R.id.tv_last_scan_results);
+
+		startUpdateListView();
+		startUpdateNextScanRequestInfo();
 
 		return view;
     }
@@ -123,14 +131,21 @@ public class FragmentWLANList
     }
     
 	private void updateWLANList() {
-    	ArrayList<ScanResult> scanResults = mainActivity.getScanResults();
-    	scanResultList.clear();
-    	for (ScanResult sr : scanResults) {
-    		scanResultList.add(sr);
-    	}
+		if (scanResults == null) {
+			return;
+		}
 
-    	SortingHelper.sort(scanResultList, currentSortingOption);
-        wlanAdapter.notifyDataSetChanged();   
+		scanResultsInProgress = true;
+
+		scanResults.clear();
+		for (ScanResult sr : mainActivity.getScanResults()) {
+			scanResults.add(sr);
+		}
+
+    	SortingHelper.sort(scanResults, currentSortingOption);
+        arrayAdapter.notifyDataSetChanged();
+
+		scanResultsInProgress = false;
     }
     
 	@Override
@@ -145,13 +160,56 @@ public class FragmentWLANList
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		String optionName = (String) sortingSpinner.getItemAtPosition(position);
 		currentSortingOption = sortingHelper.getSortingOption(optionName);
-		SortingHelper.sort(scanResultList, currentSortingOption);
-		wlanAdapter.notifyDataSetChanged();
+		SortingHelper.sort(scanResults, currentSortingOption);
+		arrayAdapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
+	}
+
+	private void startUpdateNextScanRequestInfo() {
+		final Handler handler 	= new Handler();
+		Timer timer 			= new Timer();
+		TimerTask timerTask 	= new TimerTask() {
+			public void run() {
+			handler.post(new Runnable() {
+				public void run() {
+					long nextScanRequest = Math.round(mainActivity.getMillisToNextScanRequest() / 1000);
+
+					SharedPreferences sharedPrefs 	= mainActivity.getPreferences(Context.MODE_PRIVATE);
+					float scanDelaySeconds			= sharedPrefs.getFloat(Util.PREF_SETTING_SCAN_DELAY, Util.getDefaultScanDelay()) / 1000;
+
+					if (scanDelaySeconds > 5.0f) {
+						tvLastScanResults.setText("Next scan request: " + nextScanRequest + "s");
+					} else {
+						tvLastScanResults.setText("");
+					}
+				}
+			});
+			}
+		};
+
+		timer.schedule(timerTask, 0, 500); //
+	}
+
+	private void startUpdateListView() {
+		final Handler handler 	= new Handler();
+		Timer timer 			= new Timer();
+		TimerTask timerTask 	= new TimerTask() {
+			public void run() {
+				handler.post(new Runnable() {
+					public void run() {
+						if (! scanResultsInProgress) {
+							arrayAdapter.notifyDataSetChanged();
+						}
+					}
+				});
+			}
+		};
+
+		timer.schedule(timerTask, 0, 500); //
 	}
 
 	@Override

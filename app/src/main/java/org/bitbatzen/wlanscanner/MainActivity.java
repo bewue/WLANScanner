@@ -34,6 +34,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,7 +67,7 @@ public class MainActivity extends Activity implements IEventListener {
 
 	public final static boolean SHOWROOM_MODE_ENABLED	= false;
 
-	public final static int MAX_SCAN_RESULT_AGE			= 35; // (in seconds)
+	public final static int MAX_SCAN_RESULT_AGE			= 130; // (in seconds)
 
 	public final static int FRAGMENT_ID_WLANLIST		= 0;
 	public final static int FRAGMENT_ID_DIAGRAM_24GHZ	= 1;
@@ -106,8 +107,9 @@ public class MainActivity extends Activity implements IEventListener {
     private boolean wlanEnabledByApp;
 
     private boolean scanEnabled;
-    private boolean scanTimerIsRunning		= false;
-	private long lastScanResultReceivedTime = 0;
+    private boolean scanTimerIsRunning			= false;
+	private long lastScanResultsReceivedTime 	= 0;
+	private long latestScanResultTime 			= 0; // the elapsed time of the latest scan result item since boot
 
     private SharedPreferences sharedPrefs;
 
@@ -148,19 +150,19 @@ public class MainActivity extends Activity implements IEventListener {
 
         tab1 = actionBar.newTab();
         tab1.setTabListener(new MyTabListener(this, fragmentWLANList));
-        actionBar.addTab(tab1, FRAGMENT_ID_WLANLIST);
+        actionBar.addTab(tab1, FRAGMENT_ID_WLANLIST, currentFragmentID == FRAGMENT_ID_WLANLIST);
 
         tab2 = actionBar.newTab();
         tab2.setTabListener(new MyTabListener(this, fragmentDiagram24GHz));
-        actionBar.addTab(tab2, FRAGMENT_ID_DIAGRAM_24GHZ);
+        actionBar.addTab(tab2, FRAGMENT_ID_DIAGRAM_24GHZ, currentFragmentID == FRAGMENT_ID_DIAGRAM_24GHZ);
 
         tab3 = actionBar.newTab();
         tab3.setTabListener(new MyTabListener(this, fragmentDiagram5GHz));
-        actionBar.addTab(tab3, FRAGMENT_ID_DIAGRAM_5GHZ);
+        actionBar.addTab(tab3, FRAGMENT_ID_DIAGRAM_5GHZ, currentFragmentID == FRAGMENT_ID_DIAGRAM_5GHZ);
 
 		tab4 = actionBar.newTab();
 		tab4.setTabListener(new MyTabListener(this, fragmentDiagram6GHz));
-		actionBar.addTab(tab4, FRAGMENT_ID_DIAGRAM_6GHZ);
+		actionBar.addTab(tab4, FRAGMENT_ID_DIAGRAM_6GHZ, currentFragmentID == FRAGMENT_ID_DIAGRAM_6GHZ);
 
 		updateTabTitles(new ArrayList<ScanResult>());
 
@@ -298,11 +300,13 @@ public class MainActivity extends Activity implements IEventListener {
 	}
 
 	private void onReceivedScanResults() {
+		lastScanResultsReceivedTime = System.currentTimeMillis();
+
 		if (! scanEnabled) {
 			return;
 		}
 
-		List<ScanResult> scanResults = null;
+		List<ScanResult> scanResults;
 		if (SHOWROOM_MODE_ENABLED) {
 			scanResults = createShowRoomScanResults();
 		}
@@ -313,8 +317,12 @@ public class MainActivity extends Activity implements IEventListener {
 		scanResultListOrig.clear();
     	scanResultListFiltered.clear();
 
-    	for (ScanResult sr : scanResults) {
+		ScanResult latestScanResult = getLatestScanResult(scanResults);
+		if (latestScanResult != null) {
+			latestScanResultTime = latestScanResult.timestamp;
+		}
 
+    	for (ScanResult sr : scanResults) {
     		if (android.os.Build.VERSION.SDK_INT >= 17) {
 				long age = ((SystemClock.elapsedRealtime() * 1000) - sr.timestamp) / 1000000;
 				// if the wlan was last seen more than MAX_SCAN_RESULT_AGE seconds ago, do not add it to the list
@@ -341,9 +349,22 @@ public class MainActivity extends Activity implements IEventListener {
 
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
     	invalidateOptionsMenu();
+	}
 
-    	lastScanResultReceivedTime = System.currentTimeMillis();
-		requestScan();
+	public ScanResult getLatestScanResult(List<ScanResult> scanResults) {
+		if (android.os.Build.VERSION.SDK_INT < 17) {
+			return null;
+		}
+
+		ScanResult latest = null;
+
+		for (ScanResult sr : scanResults) {
+			if (latest == null || sr.timestamp < latest.timestamp) {
+				latest = sr;
+			}
+		}
+
+		return latest;
 	}
 
 	private void updateTabTitles(ArrayList<ScanResult> scanResults) {
@@ -490,10 +511,7 @@ public class MainActivity extends Activity implements IEventListener {
 
 		setWLANEnabled(true);
 
-		SharedPreferences sharedPrefs = getPreferences(Context.MODE_PRIVATE);
-		float scanDelay = sharedPrefs.getFloat(Util.PREF_SETTING_SCAN_DELAY, Util.getDefaultScanDelay());
-
-		long delay = (long) Math.max(0, scanDelay - (System.currentTimeMillis() - lastScanResultReceivedTime));
+		long delay = getMillisToNextScanRequest();
 
 		scanTimerIsRunning = true;
 		new Timer().schedule(new TimerTask() {
@@ -501,14 +519,34 @@ public class MainActivity extends Activity implements IEventListener {
 			public void run() {
 				scanTimerIsRunning = false;
 				if (scanEnabled) {
+					SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
+					editor.putLong(Util.PREF_SETTING_LAST_SCAN_REQUEST_TIME, System.currentTimeMillis());
+					editor.commit();
+
 					wm.startScan();
+					requestScan();
 				}
 			}
 		}, delay);
 	}
 
-	public long getLastScanResultReceivedTime() {
-		return lastScanResultReceivedTime;
+	public long getMillisToNextScanRequest() {
+		SharedPreferences sharedPrefs 	= getPreferences(Context.MODE_PRIVATE);
+		long lastScanRequestTime 		= sharedPrefs.getLong(Util.PREF_SETTING_LAST_SCAN_REQUEST_TIME, 0);
+		float scanDelay 				= sharedPrefs.getFloat(Util.PREF_SETTING_SCAN_DELAY, Util.getDefaultScanDelay());
+		long millis						= (long) Math.max(0, scanDelay - (System.currentTimeMillis() - lastScanRequestTime));
+		return millis;
+	}
+
+	public long getLastScanResultsReceivedTime() {
+		return lastScanResultsReceivedTime;
+	}
+
+	/**
+	 * @return the elapsed time of the latest scan result item since boot
+	 */
+	public long getLatestScanResultTime() {
+		return latestScanResultTime;
 	}
 
 	public void setCurrentFragmentID(int fragmentID) {

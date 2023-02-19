@@ -70,7 +70,7 @@ public class DialogSettings
 
 		if (android.os.Build.VERSION.SDK_INT >= 28) {
 			TextView tvScanDelayInfo = (TextView) findViewById(R.id.tv_dialog_settings_scan_delay_info);
-			tvScanDelayInfo.setText("Since android 9 each foreground app can only scan four times in a 2-minute period by default. Thus the default scan delay should be set to " + Util.getDefaultScanDelay() / 1000f + " seconds to get continuous scan results");
+			tvScanDelayInfo.setText("Since Android 9, each foreground app can only scan four times in a 2-minute period. Therefore, the scan delay should be set to at least " + Util.getDefaultScanDelay() / 1000f + " seconds to get continuous scan results.");
 		}
 	}
 

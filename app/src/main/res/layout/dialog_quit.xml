@@ -32,8 +32,8 @@
             android:background="@drawable/buttonselector"
             android:clickable="true"
             android:text="Yes"
-            android:textColor="@color/wlanscanner_button_text"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/wlanscanner_button_text" />
 
         <Button
             android:id="@+id/button_dialog_no"
@@ -43,8 +43,8 @@
             android:background="@drawable/buttonselector"
             android:clickable="true"
             android:text="No"
-            android:textColor="@color/wlanscanner_button_text"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/wlanscanner_button_text" />
     </LinearLayout>
 
 </LinearLayout>

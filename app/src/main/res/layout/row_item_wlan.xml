@@ -14,6 +14,16 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/rowItemLastSeen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/rowItemSSID"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/wlanscanner_warning_text"
+        android:textSize="14sp" />
+
+    <TextView
         android:id="@+id/rowItemLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +49,7 @@
         android:paddingRight="2sp"
         android:paddingBottom="0sp"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/rowItemChannelWidth"
@@ -47,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/rowItemFrequencyBand"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/rowItemFrequencyBand"
@@ -64,17 +74,7 @@
         android:paddingRight="2sp"
         android:paddingBottom="0sp"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="12sp" />
-
-    <TextView
-        android:id="@+id/rowItemWLANStandard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/rowItemFrequencyBand"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentRight="false"
-        android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/rowItemCapabilities"
@@ -84,7 +84,7 @@
         android:layout_alignParentLeft="true"
         android:maxLines="1"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/rowItemBSSID"
@@ -95,6 +95,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="false"
         android:textColor="@color/wlanscanner_list_item_color1"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
 </RelativeLayout>

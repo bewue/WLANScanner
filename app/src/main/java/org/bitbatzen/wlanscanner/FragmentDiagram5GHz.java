@@ -53,9 +53,7 @@ public class FragmentDiagram5GHz
         levelDiagram = (LevelDiagram5GHz) view.findViewById(R.id.levelDiagram5GHz);
         levelDiagram.updateDiagram(mainActivity);
 
-        getActivity().invalidateOptionsMenu();
-
-		mainActivity = (MainActivity) getActivity();
+        mainActivity.invalidateOptionsMenu();
 		mainActivity.setCurrentFragmentID(mainActivity.FRAGMENT_ID_DIAGRAM_5GHZ);
 		
 		return view;
@@ -65,6 +63,10 @@ public class FragmentDiagram5GHz
 	public void handleEvent(EventID eventID) {
 		switch (eventID) {
 		case SCAN_RESULT_CHANGED:
+			if (levelDiagram == null) {
+				return;
+			}
+
 			levelDiagram.updateDiagram(mainActivity);
 			break;
 		default:

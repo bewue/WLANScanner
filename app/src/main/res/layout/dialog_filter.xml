@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="320dp"
+    android:layout_width="340dp"
     android:layout_height="wrap_content"
     android:background="@drawable/dialog_bg"
     android:orientation="vertical">
@@ -25,25 +25,28 @@
             android:id="@+id/cb_dialog_filter_24_ghz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="20dp"
             android:textColor="@color/wlanscanner_dialog_text"
-            android:text="2.4 GHz" />
+            android:text="2.4 GHz"
+            android:textSize="16sp" />
 
         <CheckBox
             android:id="@+id/cb_dialog_filter_5_ghz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:textColor="@color/wlanscanner_dialog_text"
-            android:text="5 GHz" />
+            android:text="5 GHz"
+            android:textSize="16sp" />
 
         <CheckBox
             android:id="@+id/cb_dialog_filter_6_ghz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:textColor="@color/wlanscanner_dialog_text"
-            android:text="6 GHz" />
+            android:text="6 GHz"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -56,7 +59,7 @@
             android:id="@+id/tv_dialog_filter_ssid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="135dp"
+            android:width="145dp"
             android:paddingLeft="10dp"
             android:paddingTop="18dp"
             android:text="SSID (contains):"
@@ -68,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_dialog_filter_ssid"
-            android:width="140dp"
+            android:width="145dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:textColor="@color/wlanscanner_dialog_text"
@@ -93,7 +96,7 @@
             android:id="@+id/tv_dialog_filter_bssid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="135dp"
+            android:width="145dp"
             android:paddingLeft="10dp"
             android:paddingTop="18dp"
             android:text="BSSID (contains):"
@@ -105,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_dialog_filter_bssid"
-            android:width="140dp"
+            android:width="145dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:textColor="@color/wlanscanner_dialog_text"
@@ -130,7 +133,7 @@
             android:id="@+id/tv_dialog_filter_channel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="135dp"
+            android:width="145dp"
             android:paddingLeft="10dp"
             android:paddingTop="18dp"
             android:text="Channel:"
@@ -142,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_dialog_filter_channel"
-            android:width="140dp"
+            android:width="145dp"
             android:ems="10"
             android:inputType="numberDecimal"
             android:numeric="integer"
@@ -167,7 +170,7 @@
             android:id="@+id/tv_dialog_filter_capabili"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:width="135dp"
+            android:width="145dp"
             android:paddingLeft="10dp"
             android:paddingTop="18dp"
             android:text="Capabilities:"
@@ -179,7 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_dialog_filter_capabili"
-            android:width="140dp"
+            android:width="145dp"
             android:ems="10"
             android:textColor="@color/wlanscanner_dialog_text" />
 
@@ -203,8 +206,9 @@
             android:id="@+id/cb_dialog_filter_invert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="5dp"
             android:text="Invert Match"
+            android:textSize="16sp"
             android:textColor="@color/wlanscanner_dialog_text" />
 
     </RelativeLayout>
@@ -238,8 +242,8 @@
             android:background="@drawable/buttonselector"
             android:clickable="true"
             android:text="Ok"
-            android:textColor="@color/wlanscanner_button_text"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/wlanscanner_button_text" />
 
     </LinearLayout>
 

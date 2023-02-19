@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="10dp"
-            android:textColor="@color/wlanscanner_list_item_color2"
+            android:textColor="@color/wlanscanner_list_item_color1"
             android:textSize="16sp" />
     </LinearLayout>
 
@@ -74,8 +74,8 @@
             android:background="@drawable/buttonselector"
             android:clickable="true"
             android:text="Ok"
-            android:textColor="@color/wlanscanner_button_text"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/wlanscanner_button_text" />
     </LinearLayout>
 
 </LinearLayout>

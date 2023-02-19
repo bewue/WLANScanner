@@ -20,8 +20,9 @@
 package org.bitbatzen.wlanscanner;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
+import android.os.SystemClock;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,14 +39,14 @@ class ArrayAdapterWLAN extends BaseAdapter {
     Context context;
     
     ArrayList<ScanResult> data;
-    
+
     private static LayoutInflater inflater = null;
 
     
     public ArrayAdapterWLAN(Context context, ArrayList<ScanResult> data) {
-        this.context = context;
-        this.data = data;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.context    = context;
+        this.data       = data;
+        inflater        = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -69,52 +70,57 @@ class ArrayAdapterWLAN extends BaseAdapter {
         if (view == null) {
             view = inflater.inflate(R.layout.row_item_wlan, null);
         }
+
+        MainActivity mainActivity       = (MainActivity) context;
+        SharedPreferences sharedPrefs   = mainActivity.getPreferences(Context.MODE_PRIVATE);
         
-        ScanResult itemData = data.get(position);
+        ScanResult sr = data.get(position);
 
         // ssid
         TextView ssidItem = (TextView) view.findViewById(R.id.rowItemSSID);
-        ssidItem.setText(itemData.SSID);
+        ssidItem.setText(sr.SSID);
 
+        // last seen (will be updated via FragmentWLANList.startUpdateListView())
+        if (android.os.Build.VERSION.SDK_INT >= 17) {
+            TextView tvLastSeen = (TextView) view.findViewById(R.id.rowItemLastSeen);
+            long age            = ((SystemClock.elapsedRealtime() * 1000) - sr.timestamp) / 1000000;
+            float scan_delay    = sharedPrefs.getFloat(Util.PREF_SETTING_SCAN_DELAY, Util.getDefaultScanDelay()) / 1000;
+            if (age >= scan_delay + 10) {
+                tvLastSeen.setText("Last seen: " + age + "s");
+            } else {
+                tvLastSeen.setText("");
+            }
+        }
+        
         // capabilities
         TextView capabilitiesItem = (TextView) view.findViewById(R.id.rowItemCapabilities);
-        capabilitiesItem.setText(Util.getCapabilitiesString(itemData.capabilities));
+        capabilitiesItem.setText(Util.getCapabilitiesString(sr.capabilities));
 
         // level
         TextView levelItem = (TextView) view.findViewById(R.id.rowItemLevel);
-        levelItem.setText(Integer.toString(itemData.level) + " dBm");
-        if (itemData.level >= -65) {
+        levelItem.setText(Integer.toString(sr.level) + " dBm");
+        if (sr.level >= -65) {
             levelItem.setBackgroundResource(R.drawable.list_item_level_bg_green);
         }
-        else if (itemData.level >= -85) {
+        else if (sr.level >= -85) {
             levelItem.setBackgroundResource(R.drawable.list_item_level_bg_yellow);
         }
         else {
             levelItem.setBackgroundResource(R.drawable.list_item_level_bg_red);
         }
 
-        // wlan standard
-        TextView wlanStandard = (TextView) view.findViewById(R.id.rowItemWLANStandard);
-        String sWlanStandard = Util.getWLANStandard(itemData);
-        if (sWlanStandard == "") {
-            wlanStandard.setVisibility(View.INVISIBLE);
-        }
-        else {
-            wlanStandard.setText(sWlanStandard);
-        }
-        wlanStandard.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, parent.getResources().getDisplayMetrics()));
-
         // channel width
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             TextView channelWidthItem = (TextView) view.findViewById(R.id.rowItemChannelWidth);
-            channelWidthItem.setText(Util.getChannelWidth(itemData) + " MHz");
-            channelWidthItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, parent.getResources().getDisplayMetrics()));
+            channelWidthItem.setText(Util.getChannelWidth(sr) + " MHz");
+
+            channelWidthItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, (int) parent.getWidth() * 0.4f, parent.getResources().getDisplayMetrics()));
         }
 
         // channel
         String channel              = "";
         String channelFrequencies   = "";
-        int[] frequencies = Util.getFrequencies(itemData);
+        int[] frequencies = Util.getFrequencies(sr);
         if (frequencies.length == 1) {
             channel             = String.valueOf(Util.getChannel(frequencies[0]));
             channelFrequencies  = String.valueOf(frequencies[0]);
@@ -125,11 +131,11 @@ class ArrayAdapterWLAN extends BaseAdapter {
         }
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
         channelItem.setText(channel);
-        channelItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190, parent.getResources().getDisplayMetrics()));
+        channelItem.setX(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, (int) parent.getWidth() * 0.58f, parent.getResources().getDisplayMetrics()));
 
-        // frequency band (+ channel frequency(s))
-        TextView bandItem = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
-        Util.FrequencyBand fBand = Util.getFrequencyBand(itemData);
+        // frequency band (+ channel frequency(s), + wlan standard)
+        TextView bandItem           = (TextView) view.findViewById(R.id.rowItemFrequencyBand);
+        Util.FrequencyBand fBand    = Util.getFrequencyBand(sr);
         String text = "";
         if (fBand == Util.FrequencyBand.TWO_FOUR_GHZ) {
             text = "2.4 GHz";
@@ -140,11 +146,17 @@ class ArrayAdapterWLAN extends BaseAdapter {
         else if (fBand == Util.FrequencyBand.SIX_GHZ) {
             text = "6 GHz";
         }
-        bandItem.setText(text + " [" + channelFrequencies + "]");
+
+        text += " [" + channelFrequencies + "]";
+        String wlanStandard = Util.getWLANStandard(sr);
+        if (wlanStandard != "") {
+            text += " " + wlanStandard;
+        }
+        bandItem.setText(text);
 
         // bssid (mac)
         TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);
-        bssidItem.setText(itemData.BSSID);
+        bssidItem.setText(sr.BSSID);
 
         return view;
     }

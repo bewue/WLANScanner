@@ -32,30 +32,32 @@ import java.util.Map.Entry;
 
 public class Util {
 
-	public static final String PREF_SCAN_ENABLED			= "PREF_SCAN_ENABLED";
-	public static final String PREF_SORTING_OPTION			= "PREF_SORTING_OPTION";
-	public static final String PREF_WLAN_ENABLED_BY_APP		= "PREF_WLAN_ENABLED_BY_APP";
-	public static final String PREF_SELECTED_TAB			= "PREF_SELECTED_TAB";
+	public static final String PREF_SCAN_ENABLED					= "PREF_SCAN_ENABLED";
+	public static final String PREF_SORTING_OPTION					= "PREF_SORTING_OPTION";
+	public static final String PREF_WLAN_ENABLED_BY_APP				= "PREF_WLAN_ENABLED_BY_APP";
+	public static final String PREF_SELECTED_TAB					= "PREF_SELECTED_TAB";
 
-	public static final String PREF_FILTER_24GHZ_ENABLED	= "PREF_FILTER_24GHZ_ENABLED";
-	public static final String PREF_FILTER_5GHZ_ENABLED		= "PREF_FILTER_5GHZ_ENABLED";
-	public static final String PREF_FILTER_6GHZ_ENABLED		= "PREF_FILTER_6GHZ_ENABLED";
+	public static final String PREF_FILTER_24GHZ_ENABLED			= "PREF_FILTER_24GHZ_ENABLED";
+	public static final String PREF_FILTER_5GHZ_ENABLED				= "PREF_FILTER_5GHZ_ENABLED";
+	public static final String PREF_FILTER_6GHZ_ENABLED				= "PREF_FILTER_6GHZ_ENABLED";
 
-	public static final String PREF_FILTER_SSID_ENABLED		= "PREF_FILTER_SSID_ENABLED";
-	public static final String PREF_FILTER_SSID				= "PREF_FILTER_SSID";
+	public static final String PREF_FILTER_SSID_ENABLED				= "PREF_FILTER_SSID_ENABLED";
+	public static final String PREF_FILTER_SSID						= "PREF_FILTER_SSID";
 
-	public static final String PREF_FILTER_BSSID_ENABLED	= "PREF_FILTER_BSSID_ENABLED";
-	public static final String PREF_FILTER_BSSID			= "PREF_FILTER_BSSID";
+	public static final String PREF_FILTER_BSSID_ENABLED			= "PREF_FILTER_BSSID_ENABLED";
+	public static final String PREF_FILTER_BSSID					= "PREF_FILTER_BSSID";
 
-	public static final String PREF_FILTER_CHANNEL_ENABLED	= "PREF_FILTER_CHANNEL_ENABLED";
-	public static final String PREF_FILTER_CHANNEL			= "PREF_FILTER_CHANNEL";
+	public static final String PREF_FILTER_CHANNEL_ENABLED			= "PREF_FILTER_CHANNEL_ENABLED";
+	public static final String PREF_FILTER_CHANNEL					= "PREF_FILTER_CHANNEL";
 
-	public static final String PREF_FILTER_CAPABILI_ENABLED	= "PREF_FILTER_CAPABILI_ENABLED";
-	public static final String PREF_FILTER_CAPABILI			= "PREF_FILTER_CAPABILI";
+	public static final String PREF_FILTER_CAPABILI_ENABLED			= "PREF_FILTER_CAPABILI_ENABLED";
+	public static final String PREF_FILTER_CAPABILI					= "PREF_FILTER_CAPABILI";
 
-	public static final String PREF_FILTER_INVERT_ENABLED	= "PREF_FILTER_INVERT";
+	public static final String PREF_FILTER_INVERT_ENABLED			= "PREF_FILTER_INVERT";
 
-	public static final String PREF_SETTING_SCAN_DELAY		= "PREF_SETTING_SCAN_DELAY";
+	public static final String PREF_SETTING_SCAN_DELAY				= "PREF_SETTING_SCAN_DELAY";
+
+	public static final String PREF_SETTING_LAST_SCAN_REQUEST_TIME	= "PREF_SETTING_LAST_SCAN_REQUEST_TIME";
 
 	public enum FrequencyBand {
 		TWO_FOUR_GHZ,
@@ -218,7 +220,8 @@ public class Util {
 		ArrayList<ScanResult> fbScanResults = new ArrayList<>();
 
 		for (ScanResult sr : scanResults) {
-			if (Util.getFrequencyBand(sr) == fb) {
+			FrequencyBand b = Util.getFrequencyBand(sr);
+			if ((fb == null && b != FrequencyBand.UNKNOWN) || b == fb) {
 				fbScanResults.add(sr);
 			}
 		}
@@ -313,6 +316,14 @@ public class Util {
 			return "";
 		}
 
+		if (MainActivity.SHOWROOM_MODE_ENABLED) {
+			ArrayList<String> list = new ArrayList<>();
+			list.add("n");
+			list.add("ac");
+			list.add("ax");
+			return list.get((int) (Math.random() * list.size()));
+		}
+
 		int wlanStandard = sr.getWifiStandard();
 
 		switch (wlanStandard) {
@@ -338,8 +349,7 @@ public class Util {
 			}
 		}
 
-		Log.w("", "Util.getWLANStandard() -- Unknown WLAN Standard ID: " + wlanStandard);
-		return "";
+		return "?";
 	}
 
 	public static int getDefaultScanDelay() {
