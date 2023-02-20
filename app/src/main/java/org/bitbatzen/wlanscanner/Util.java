@@ -50,6 +50,9 @@ public class Util {
 	public static final String PREF_FILTER_CHANNEL_ENABLED			= "PREF_FILTER_CHANNEL_ENABLED";
 	public static final String PREF_FILTER_CHANNEL					= "PREF_FILTER_CHANNEL";
 
+	public static final String PREF_FILTER_STANDARD_ENABLED			= "PREF_FILTER_STANDARD_ENABLED";
+	public static final String PREF_FILTER_STANDARD					= "PREF_FILTER_STANDARD";
+
 	public static final String PREF_FILTER_CAPABILI_ENABLED			= "PREF_FILTER_CAPABILI_ENABLED";
 	public static final String PREF_FILTER_CAPABILI					= "PREF_FILTER_CAPABILI";
 

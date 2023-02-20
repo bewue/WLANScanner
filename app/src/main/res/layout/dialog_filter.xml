@@ -167,6 +167,42 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/tv_dialog_filter_standard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="145dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="18dp"
+            android:text="WLAN Standard:"
+            android:textColor="@color/wlanscanner_dialog_text"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/et_dialog_filter_standard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_dialog_filter_standard"
+            android:width="145dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:textColor="@color/wlanscanner_dialog_text" />
+
+        <CheckBox
+            android:id="@+id/cb_dialog_filter_standard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/et_dialog_filter_standard"
+            android:paddingTop="22dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
             android:id="@+id/tv_dialog_filter_capabili"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -59,6 +59,9 @@ public class DialogFilter
 	CheckBox cbFilterChannelEnabled;
 	EditText etFilterChannel;
 
+	CheckBox cbFilterStandardEnabled;
+	EditText etFilterStandard;
+
 	CheckBox cbFilterCapabiliEnabled;
 	EditText etFilterCapabili;
 
@@ -126,6 +129,21 @@ public class DialogFilter
 		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
 		etFilterChannel 				= (EditText) findViewById(R.id.et_dialog_filter_channel);
 		etFilterChannel.setText(filterChannel);
+
+		// filter standard
+		boolean filterStandardEnabled	= sharedPrefs.getBoolean(Util.PREF_FILTER_STANDARD_ENABLED, false);
+		cbFilterStandardEnabled 		= (CheckBox) findViewById(R.id.cb_dialog_filter_standard);
+		cbFilterStandardEnabled.setChecked(filterStandardEnabled);
+
+		String filterStandard			= sharedPrefs.getString(Util.PREF_FILTER_STANDARD, "");
+		etFilterStandard 				= (EditText) findViewById(R.id.et_dialog_filter_standard);
+		etFilterStandard.setText(filterStandard);
+
+		if (android.os.Build.VERSION.SDK_INT < 30) {
+			findViewById(R.id.tv_dialog_filter_standard).setVisibility(View.GONE);
+			etFilterStandard.setVisibility(View.GONE);
+			cbFilterStandardEnabled.setVisibility(View.GONE);
+		}
 
 		// filter capabili
 		boolean filterCapabiliEnabled	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
@@ -204,6 +222,20 @@ public class DialogFilter
 
 		editor.putBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, filterChannelEnabled);
 		editor.putString(Util.PREF_FILTER_CHANNEL, filterChannel);
+
+		// wlan standard filter
+		if (android.os.Build.VERSION.SDK_INT >= 30) {
+			boolean filterStandardEnabled = cbFilterStandardEnabled.isChecked();
+			String filterStandard = etFilterStandard.getText().toString();
+
+			if (filterStandardEnabled && filterStandard.equals("")) {
+				etFilterInfo.setText("Invalid WLAN standard filter!");
+				return;
+			}
+
+			editor.putBoolean(Util.PREF_FILTER_STANDARD_ENABLED, filterStandardEnabled);
+			editor.putString(Util.PREF_FILTER_STANDARD, filterStandard);
+		}
 
 		// capabilities filter
 		boolean filterCapabiliEnabled	= cbFilterCapabiliEnabled.isChecked();

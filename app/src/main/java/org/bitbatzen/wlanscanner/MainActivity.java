@@ -390,13 +390,16 @@ public class MainActivity extends Activity implements IEventListener {
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
 		String filterChannel			= sharedPrefs.getString(Util.PREF_FILTER_CHANNEL, "");
 
+		boolean filterStandardEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_STANDARD_ENABLED, false);
+		String filterStandard			= sharedPrefs.getString(Util.PREF_FILTER_STANDARD, "");
+
 		boolean filterCapabiliEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
 		String filterCapabili			= sharedPrefs.getString(Util.PREF_FILTER_CAPABILI, "");
 
 		boolean filterInvertEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_INVERT_ENABLED, false);
 
 		if (filter24GHzEnabled && filter5GHzEnabled && filter6GHzEnabled
-				&& ! filterSSIDEnabled && ! filterBSSIDEnabled && ! filterChannelEnabled && ! filterCapabiliEnabled) {
+				&& ! filterSSIDEnabled && ! filterBSSIDEnabled && ! filterChannelEnabled && ! filterStandardEnabled && ! filterCapabiliEnabled) {
 
 			return true;
 		}
@@ -409,6 +412,7 @@ public class MainActivity extends Activity implements IEventListener {
 		boolean isSSIDMatch 	= (filterSSIDEnabled && sr.SSID.toLowerCase().contains(filterSSID.toLowerCase()));
 		boolean isBSSIDMatch 	= (filterBSSIDEnabled && sr.BSSID.toLowerCase().contains(filterBSSID.toLowerCase()));
 		boolean isCapabiliMatch	= (filterCapabiliEnabled && sr.capabilities.toLowerCase().contains(filterCapabili.toLowerCase()));
+		boolean isStandardMatch = (filterStandardEnabled && Util.getWLANStandard(sr).toLowerCase().contains(filterStandard.toLowerCase()));
 
 		boolean isChannelMatch = false;
 		if (filterChannelEnabled) {
@@ -428,13 +432,15 @@ public class MainActivity extends Activity implements IEventListener {
 					&& (! filterSSIDEnabled || ! isSSIDMatch)
 					&& (! filterBSSIDEnabled || ! isBSSIDMatch)
 					&& (! filterCapabiliEnabled || ! isCapabiliMatch)
-					&& (! filterChannelEnabled || ! isChannelMatch));
+					&& (! filterChannelEnabled || ! isChannelMatch)
+					&& (! filterStandardEnabled || ! isStandardMatch));
 		} else {
 			return ((is24GHzMatch || is5GHzMatch || is6GHzMatch)
 					&& (! filterSSIDEnabled || isSSIDMatch)
 					&& (! filterBSSIDEnabled || isBSSIDMatch)
 					&& (! filterCapabiliEnabled || isCapabiliMatch)
-					&& (! filterChannelEnabled || isChannelMatch));
+					&& (! filterChannelEnabled || isChannelMatch)
+					&& (! filterStandardEnabled || isStandardMatch));
 		}
 	}
 
@@ -462,10 +468,11 @@ public class MainActivity extends Activity implements IEventListener {
 		boolean filterSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_SSID_ENABLED, false);
 		boolean filterBSSIDEnabled 		= sharedPrefs.getBoolean(Util.PREF_FILTER_BSSID_ENABLED, false);
 		boolean filterChannelEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CHANNEL_ENABLED, false);
+		boolean filterStandardEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_STANDARD_ENABLED, false);
 		boolean filterCapabiliEnabled 	= sharedPrefs.getBoolean(Util.PREF_FILTER_CAPABILI_ENABLED, false);
 
 		if (! filter24GHzEnabled || ! filter5GHzEnabled || ! filter6GHzEnabled
-				|| filterSSIDEnabled || filterBSSIDEnabled || filterChannelEnabled || filterCapabiliEnabled) {
+				|| filterSSIDEnabled || filterBSSIDEnabled || filterChannelEnabled || filterStandardEnabled || filterCapabiliEnabled) {
 
 			buttonFilter.setIcon(R.drawable.ic_filter_active);
 		}
