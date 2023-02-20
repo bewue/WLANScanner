@@ -63,6 +63,7 @@ public class Util {
 		TWO_FOUR_GHZ,
 		FIVE_GHZ,
 		SIX_GHZ,
+		SIXTY_GHZ,
 		UNKNOWN
 	}
 	
@@ -78,8 +79,12 @@ public class Util {
 
 	public static final int START_6GHZ_BAND = 5940;
 	public static final int END_6GHZ_BAND = 7100;
-    
+
+	public static final int START_60GHZ_BAND = 58320;
+	public static final int END_60GHZ_BAND = 69120;
+
     static {
+		// 2.4 GHz
     	Map<Integer, Integer> aMap = new HashMap<Integer, Integer>();
         aMap.put(2412, 1);
         aMap.put(2417, 2);
@@ -96,7 +101,8 @@ public class Util {
         aMap.put(2472, 13);
         aMap.put(2484, 14);
         CHANNELS_24GHZ_BAND = Collections.unmodifiableMap(aMap);
-        
+
+		// 5 GHz
     	aMap = new HashMap<Integer, Integer>();
     	aMap.put(4915, 183);
     	aMap.put(4920, 184);
@@ -165,6 +171,7 @@ public class Util {
 		aMap.put(5865, 173);
         CHANNELS_5GHZ_BAND = Collections.unmodifiableMap(aMap);
 
+		// 6 GHz
 		aMap = new HashMap<Integer, Integer>();
 		int channel = 1;
 		for (int i = START_6GHZ_BAND; i <= END_6GHZ_BAND; i += 20) {
@@ -210,6 +217,8 @@ public class Util {
 			return FrequencyBand.FIVE_GHZ;
 		} else if (CHANNELS_6GHZ_BAND.containsKey(frequency)) {
 			return FrequencyBand.SIX_GHZ;
+		} else if (frequency >= START_60GHZ_BAND && frequency <= END_60GHZ_BAND) {
+			return FrequencyBand.SIXTY_GHZ;
 		}
 
 		Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
@@ -230,22 +239,20 @@ public class Util {
 	}
 	
 	public static int getFrequency(FrequencyBand frequencyBand, int channel) {
+		Map<Integer, Integer> channels = null;
+
     	if (frequencyBand == FrequencyBand.TWO_FOUR_GHZ) {
-			for (Entry<Integer, Integer> entry : CHANNELS_24GHZ_BAND.entrySet()) {
-				if (entry.getValue() == channel) {
-					return entry.getKey();
-				}
-			}
+			channels = CHANNELS_24GHZ_BAND;
 		}
     	else if (frequencyBand == FrequencyBand.FIVE_GHZ) {
-			for (Entry<Integer, Integer> entry : CHANNELS_5GHZ_BAND.entrySet()) {
-				if (entry.getValue() == channel) {
-					return entry.getKey();
-				}
-			}
+			channels = CHANNELS_5GHZ_BAND;
 		}
 		else if (frequencyBand == FrequencyBand.SIX_GHZ) {
-			for (Entry<Integer, Integer> entry : CHANNELS_6GHZ_BAND.entrySet()) {
+			channels = CHANNELS_6GHZ_BAND;
+		}
+
+		if (channels != null) {
+			for (Entry<Integer, Integer> entry : channels.entrySet()) {
 				if (entry.getValue() == channel) {
 					return entry.getKey();
 				}

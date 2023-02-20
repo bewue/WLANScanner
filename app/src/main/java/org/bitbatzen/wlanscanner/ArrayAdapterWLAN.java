@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,13 +119,14 @@ class ArrayAdapterWLAN extends BaseAdapter {
         // channel
         String channel              = "";
         String channelFrequencies   = "";
-        int[] frequencies = Util.getFrequencies(sr);
+        int[] frequencies           = Util.getFrequencies(sr);
+        int channel1                = Util.getChannel(frequencies[0]);
         if (frequencies.length == 1) {
-            channel             = String.valueOf(Util.getChannel(frequencies[0]));
+            channel             = (channel1 == -1) ? "?" : String.valueOf(channel1);
             channelFrequencies  = String.valueOf(frequencies[0]);
         }
         else if (frequencies.length == 2) {
-            channel             = Util.getChannel(frequencies[0]) + "+" + Util.getChannel(frequencies[1]);
+            channel             = (channel1 == -1) ? "?+?" : channel1 + "+" + Util.getChannel(frequencies[1]);
             channelFrequencies  = frequencies[0] + "+" + frequencies[1];
         }
         TextView channelItem = (TextView) view.findViewById(R.id.rowItemChannel);
@@ -139,12 +139,14 @@ class ArrayAdapterWLAN extends BaseAdapter {
         String text = "";
         if (fBand == Util.FrequencyBand.TWO_FOUR_GHZ) {
             text = "2.4 GHz";
-        }
-        else if (fBand == Util.FrequencyBand.FIVE_GHZ) {
+        } else if (fBand == Util.FrequencyBand.FIVE_GHZ) {
             text = "5 GHz";
-        }
-        else if (fBand == Util.FrequencyBand.SIX_GHZ) {
+        } else if (fBand == Util.FrequencyBand.SIX_GHZ) {
             text = "6 GHz";
+        } else if (fBand == Util.FrequencyBand.SIXTY_GHZ) {
+            text = "60 GHz";
+        } else {
+            text = "?";
         }
 
         text += " [" + channelFrequencies + "]";
