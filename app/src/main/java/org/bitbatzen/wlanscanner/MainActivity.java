@@ -184,7 +184,7 @@ public class MainActivity extends Activity implements IEventListener {
 
         scanResultListOrig 		= new ArrayList<>();
 		scanResultListFiltered 	= new ArrayList<>();
-
+		
         brScanResults = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent intent) {
@@ -193,6 +193,9 @@ public class MainActivity extends Activity implements IEventListener {
         };
 
         registerReceiver(brScanResults, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
+		// (call WifiManager.getScanResults() to get existing scan results on app start)
+		onReceivedScanResults();
 
 		requestScan();
 
