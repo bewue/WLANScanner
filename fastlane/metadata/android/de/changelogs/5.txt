@@ -1,0 +1,7 @@
+- Anzeige des Herstellers (MAC/OUI)
+- Zusätzliche Filter-Optionen: Band (2.4 GHz, 5 GHz, 6 GHz), BSSID, WLAN Standard (ab Android 11), Negieren Funktion
+- Anzeige der Kanal Frequenz(en) bei den WLANs in der Listenansicht
+- "Last seen ... seconds" Warnung bei WLANs in der Listenansicht, wenn Wert zu hoch ist
+- Grundlegende Unterstützung für das 60 GHz Band (802.11ad) in der Listenansicht
+- Mehr Informationen über die benötigten Berechtigungen
+- Verbesserungen am UI
