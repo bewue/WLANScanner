@@ -92,7 +92,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="27dp"
+        android:layout_above="@+id/rowItemBSSID"
+        android:layout_marginBottom="-2dp"
         android:textColor="@color/wlanscanner_list_item_color1"
         android:textSize="14sp" />
 
