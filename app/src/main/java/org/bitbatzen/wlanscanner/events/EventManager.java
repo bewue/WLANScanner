@@ -60,7 +60,7 @@ public class EventManager {
 		    if (entry.getKey() ==  eventID) {
 		    	ArrayList<IEventListener> listenerList = entry.getValue();
 		    	for (IEventListener listener : listenerList) {
-//		    		Log.d("++++++++++", "EventManager::sendEvent() : " + eventID + " : " + listener.getClass().toString());
+//		    		Log.d(Util.LOG_TAG, "EventManager::sendEvent() : " + eventID + " : " + listener.getClass().toString());
 		    		listener.handleEvent(eventID);
 		    	}
 		    	return;

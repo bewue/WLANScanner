@@ -113,10 +113,15 @@ public class MainActivity extends Activity implements IEventListener {
 
     private SharedPreferences sharedPrefs;
 
+	private OUI ouiHandler;
+
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+		// create oui database
+		ouiHandler = new OUI(this);
 
         EventManager.sharedInstance().addListener(this, EventID.USER_QUIT);
 		EventManager.sharedInstance().addListener(this, EventID.FILTER_CHANGED);
@@ -352,6 +357,10 @@ public class MainActivity extends Activity implements IEventListener {
 
     	EventManager.sharedInstance().sendEvent(Events.EventID.SCAN_RESULT_CHANGED);
     	invalidateOptionsMenu();
+	}
+
+	public OUI getOUIHandler() {
+		return ouiHandler;
 	}
 
 	public ScanResult getLatestScanResult(List<ScanResult> scanResults) {

@@ -156,6 +156,10 @@ class ArrayAdapterWLAN extends BaseAdapter {
         }
         bandItem.setText(text);
 
+        // vendor
+        TextView vendorItem = (TextView) view.findViewById(R.id.rowItemVendor);
+        vendorItem.setText(mainActivity.getOUIHandler().getVendor(sr.BSSID, 18));
+
         // bssid (mac)
         TextView bssidItem = (TextView) view.findViewById(R.id.rowItemBSSID);
         bssidItem.setText(sr.BSSID);

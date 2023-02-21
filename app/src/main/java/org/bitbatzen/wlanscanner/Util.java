@@ -32,6 +32,8 @@ import java.util.Map.Entry;
 
 public class Util {
 
+	public static final String LOG_TAG								= "wlanscanner";
+
 	public static final String PREF_SCAN_ENABLED					= "PREF_SCAN_ENABLED";
 	public static final String PREF_SORTING_OPTION					= "PREF_SORTING_OPTION";
 	public static final String PREF_WLAN_ENABLED_BY_APP				= "PREF_WLAN_ENABLED_BY_APP";
@@ -224,7 +226,7 @@ public class Util {
 			return FrequencyBand.SIXTY_GHZ;
 		}
 
-		Log.w("", "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
+		Log.w(Util.LOG_TAG, "Util.getFrequencyBand() -- Unknown Frequency: " + frequency);
 		return FrequencyBand.UNKNOWN;
 	}
 	
@@ -317,7 +319,7 @@ public class Util {
 			}
 		}
 
-		Log.w("", "Util.getChannelWidth() -- Unknown Channel Width ID: " + sr.channelWidth);
+		Log.w(Util.LOG_TAG, "Util.getChannelWidth() -- Unknown Channel Width ID: " + sr.channelWidth);
 		return 20;
 	}
 

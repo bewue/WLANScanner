@@ -87,6 +87,16 @@
         android:textSize="14sp" />
 
     <TextView
+        android:id="@+id/rowItemVendor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="27dp"
+        android:textColor="@color/wlanscanner_list_item_color1"
+        android:textSize="14sp" />
+
+    <TextView
         android:id="@+id/rowItemBSSID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
