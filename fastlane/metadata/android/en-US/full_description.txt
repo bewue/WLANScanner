@@ -1,7 +1,6 @@
 WiFiScanner is an App for analysing the WiFi networks in range.
 
-WiFiScanner features a list view and diagram views for the 2.4 GHz, 5 GHz and 6 GHz band.
-Filter, sorting options and other settings are also available.
+WiFiScanner features a list view and diagram views for the 2.4 GHz, 5 GHz and 6 GHz band. Filter, sorting options and other settings are also available.
 
 Open source. No Ads.
 
