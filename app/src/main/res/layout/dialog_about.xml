@@ -51,13 +51,22 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/tv_dialog_about_www"
+        android:id="@+id/tv_dialog_about_website_url"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="8dp"
-        android:autoLink="web"
-        android:text="@string/www"
+        android:text="@string/website_url"
+        android:textColor="@color/wlanscanner_dialog_text"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_dialog_about_permission_info_url"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:text="@string/permission_url"
         android:textColor="@color/wlanscanner_dialog_text"
         android:textSize="16sp" />
 

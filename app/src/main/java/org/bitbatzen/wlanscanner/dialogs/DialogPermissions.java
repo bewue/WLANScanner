@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -43,6 +44,7 @@ public class DialogPermissions
 
     public TextView permissionHeader;
     public TextView permissionInfo;
+    public TextView permissionInfoURL;
     public TextView permissionFooter;
     public Button buttonOk;
 
@@ -65,7 +67,10 @@ public class DialogPermissions
 
         permissionHeader    = (TextView) findViewById(R.id.tv_dialog_permission_header);
         permissionInfo      = (TextView) findViewById(R.id.tv_dialog_permission_info);
+        permissionInfoURL   = (TextView) findViewById(R.id.tv_dialog_permission_info_url);
         permissionFooter    = (TextView) findViewById(R.id.tv_dialog_permission_footer);
+        
+        permissionInfoURL.setMovementMethod(LinkMovementMethod.getInstance());
 
         if (android.os.Build.VERSION.SDK_INT < 26) {
             permissionHeader.setText("The app requires all requested permissions to work properly.");

@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">WLANScanner</string>
-    <string name="www">https://github.com/bewue/WLANScanner</string>
+    <string name="website_url"><a href="https://github.com/bewue/WLANScanner">Project Website</a></string>
+    <string name="permission_url"><a href="https://developer.android.com/guide/topics/connectivity/wifi-scan#wifi-scan-permissions">Information about the required permissions</a></string>
 
 </resources>

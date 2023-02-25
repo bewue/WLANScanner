@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -62,6 +63,12 @@ public class DialogAbout
 
 		TextView tvAppID = (TextView) findViewById(R.id.tv_dialog_about_app_id);
 		tvAppID.setText("App-ID: " + BuildConfig.APPLICATION_ID);
+
+		TextView tvWebsiteURL = (TextView) findViewById(R.id.tv_dialog_about_website_url);
+		tvWebsiteURL.setMovementMethod(LinkMovementMethod.getInstance());
+
+		TextView tvPermissionURL = (TextView) findViewById(R.id.tv_dialog_about_permission_info_url);
+		tvPermissionURL.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
 	@Override

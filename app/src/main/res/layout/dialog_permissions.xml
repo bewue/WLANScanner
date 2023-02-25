@@ -29,8 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="8dp"
-        android:autoLink="web"
-        android:text="https://developer.android.com/guide/topics/connectivity/wifi-scan#wifi-scan-permissions"
+        android:text="@string/permission_url"
         android:textColor="@color/wlanscanner_dialog_text"
         android:textSize="14sp" />
 
