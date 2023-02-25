@@ -104,8 +104,6 @@ public class MainActivity extends Activity implements IEventListener {
 
 	private BroadcastReceiver brScanResults;
 
-    private boolean wlanEnabledByApp;
-
     private boolean scanEnabled;
     private boolean scanTimerIsRunning			= false;
 	private long lastScanResultsReceivedTime 	= 0;
@@ -128,7 +126,6 @@ public class MainActivity extends Activity implements IEventListener {
 
         sharedPrefs         = getPreferences(Context.MODE_PRIVATE);
         scanEnabled         = sharedPrefs.getBoolean(Util.PREF_SCAN_ENABLED, true);
-        wlanEnabledByApp    = sharedPrefs.getBoolean(Util.PREF_WLAN_ENABLED_BY_APP, false);
         currentFragmentID   = sharedPrefs.getInt(Util.PREF_SELECTED_TAB, FRAGMENT_ID_WLANLIST);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -236,7 +233,6 @@ public class MainActivity extends Activity implements IEventListener {
 
     	SharedPreferences.Editor editor = getPreferences(Context.MODE_PRIVATE).edit();
         editor.putBoolean(Util.PREF_SCAN_ENABLED, scanEnabled);
-        editor.putBoolean(Util.PREF_WLAN_ENABLED_BY_APP, wlanEnabledByApp);
         editor.putInt(Util.PREF_SELECTED_TAB, currentFragmentID);
         editor.commit();
     }
@@ -493,29 +489,10 @@ public class MainActivity extends Activity implements IEventListener {
 		}
 	}
 
-	private void setWLANEnabled(boolean enable) {
-        if (enable && wm.isWifiEnabled() == false) {
-        	showToast("Enabling WLAN...");
-            wm.setWifiEnabled(true);
-            wlanEnabledByApp = true;
-        }
-        else if (!enable && wm.isWifiEnabled() && wlanEnabledByApp) {
-        	showToast("Disabling WLAN...");
-            wm.setWifiEnabled(false);
-            wlanEnabledByApp = false;
-        }
-	}
-
     public ArrayList<ScanResult> getScanResults() {
     	return scanResultListFiltered;
     }
-
-	public void showToast(String text) {
-    	Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
-    	toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 180);
-    	toast.show();
-	}
-
+	
 	private void setScanEnabled(boolean enable) {
 		scanEnabled = enable;
 		if (enable) {
@@ -527,8 +504,6 @@ public class MainActivity extends Activity implements IEventListener {
 		if (! scanEnabled || scanTimerIsRunning) {
 			return;
 		}
-
-		setWLANEnabled(true);
 
 		long delay = getMillisToNextScanRequest();
 
@@ -581,7 +556,6 @@ public class MainActivity extends Activity implements IEventListener {
 		switch (eventID) {
 		case USER_QUIT:
         	setScanEnabled(false);
-        	setWLANEnabled(false);
 
         	currentFragmentID 	= FRAGMENT_ID_WLANLIST;
         	scanEnabled 		= true;
