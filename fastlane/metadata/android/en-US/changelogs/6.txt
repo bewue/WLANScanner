@@ -1,0 +1,1 @@
+- fix: 6 GHz channel numbers/frequencies
