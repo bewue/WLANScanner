@@ -81,8 +81,8 @@ public class Util {
     public static final int START_5GHZ_BAND = 4915;
     public static final int END_5GHZ_BAND = 5865;
 
-	public static final int START_6GHZ_BAND = 5940;
-	public static final int END_6GHZ_BAND = 7100;
+	public static final int START_6GHZ_BAND = 5935;
+	public static final int END_6GHZ_BAND = 7115;
 
 	public static final int START_60GHZ_BAND = 58320;
 	public static final int END_60GHZ_BAND = 69120;
@@ -177,32 +177,33 @@ public class Util {
 
 		// 6 GHz
 		aMap = new HashMap<Integer, Integer>();
+		aMap.put(START_6GHZ_BAND, 2);
 		int channel = 1;
-		for (int i = START_6GHZ_BAND; i <= END_6GHZ_BAND; i += 20) {
+		for (int i = 5955; i <= END_6GHZ_BAND; i += 20) {
 			aMap.put(i, channel);
 			channel += 4;
 		}
 
 		channel = 3;
-		for (int i = 5950; i <= 7070; i += 40) {
+		for (int i = 5965; i <= END_6GHZ_BAND; i += 40) {
 			aMap.put(i, channel);
 			channel += 8;
 		}
 
 		channel = 7;
-		for (int i = 5970; i <= 7010; i += 80) {
+		for (int i = 5985; i <= END_6GHZ_BAND; i += 80) {
 			aMap.put(i, channel);
 			channel += 16;
 		}
 
 		channel = 15;
-		for (int i = 6010; i <= 6970; i += 160) {
+		for (int i = 6025; i <= END_6GHZ_BAND; i += 160) {
 			aMap.put(i, channel);
 			channel += 32;
 		}
 
 		channel = 31;
-		for (int i = 6090; i <= 7050; i += 320) {
+		for (int i = 6105; i <= END_6GHZ_BAND; i += 320) {
 			aMap.put(i, channel);
 			channel += 64;
 		}
